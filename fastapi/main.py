@@ -46,19 +46,16 @@ db = [
     }
 ]
 
-
-@app.post("/add")
-async def post_textarea(data: TextArea):
-    print(data.dict())
-    return {**data.dict()}
-
-
-@app.get("/")
-async def serve_home(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+@app.get("/add_title")
+def post_textarea(url: str, element: str, block: str):
+    return {
+        'url': url,
+        'element': element,
+        'block': block
+    }
 
 
-@app.get('/todos')
+@app.get('/')
 def fetch_users():
     return db
 
