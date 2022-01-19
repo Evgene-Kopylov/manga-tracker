@@ -6,6 +6,8 @@ from pydantic import BaseModel
 
 from fastapi.middleware.cors import CORSMiddleware
 
+from tests.materials.db_list import db_list
+
 app = FastAPI()
 
 app.add_middleware(
@@ -19,45 +21,24 @@ app.add_middleware(
 templates = Jinja2Templates(directory="templates")
 
 
-class TextArea(BaseModel):
-    content: str
+class PageScenary(BaseModel):
+    url: str
+    element: str
+    block: str
 
-
-db = [
-    {
-        "id": 0,
-        "name": "Go to the gym",
-        "done": False
-    },
-    {
-        "id": 1,
-        "name": "Walk the dog",
-        "done": False
-    },
-    {
-        "id": 2,
-        "name": "Get some pizza",
-        "done": False
-    },
-    {
-        "name": "Finish this project",
-        "id": 3,
-        "done": False
-    }
-]
 
 @app.get("/add_title")
-def post_textarea(url: str, element: str, block: str):
-    return {
-        'url': url,
-        'element': element,
-        'block': block
-    }
+def add_title(url: str, element: str, block: str):
+    scenary = PageScenary(
+        url=url,
+        element=element,
+        block=block)
+    return scenary
 
 
 @app.get('/')
-def fetch_users():
-    return db
+def main():
+    return db_list
 
 
 if __name__ == "__main__":
