@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from fastapi import Request
 import uvicorn
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
