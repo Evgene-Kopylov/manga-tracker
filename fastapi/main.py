@@ -21,7 +21,7 @@ app.add_middleware(
 templates = Jinja2Templates(directory="templates")
 
 
-class PageScenary(BaseModel):
+class PageScenario(BaseModel):
     url: str
     element: str
     block: str
@@ -29,11 +29,11 @@ class PageScenary(BaseModel):
 
 @app.get("/add_title")
 def add_title(url: str, element: str, block: str):
-    scenary = PageScenary(
+    scenario = PageScenario(
         url=url,
         element=element,
         block=block)
-    return scenary
+    return scenario
 
 
 @app.get('/')
