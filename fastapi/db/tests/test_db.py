@@ -1,6 +1,4 @@
 import unittest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from db.session import SessionLocal
 from db.models import User
 
