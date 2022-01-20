@@ -7,6 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from tests.materials.db_list import db_list
 
+from db.session import SessionLocal
+
 app = FastAPI()
 
 app.add_middleware(
@@ -19,11 +21,18 @@ app.add_middleware(
 
 templates = Jinja2Templates(directory="templates")
 
+db = SessionLocal()
+
 
 class PageScenario(BaseModel):
     url: str
     element: str
     block: str
+
+
+@app.get('/current_user')
+def show_user():
+    return 'current_user'
 
 
 @app.get("/add_title")
