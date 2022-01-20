@@ -11,14 +11,13 @@
 
 ## Структура проекта
 
-fastapi обрабатывает данные и дает api. django + vue фронт.
+fastapi обрабатывает данные и дает api. 
 бд postgres. 
 парсер в отдельном контейнере
 
 
 Контейнеры:
 - fastapi
-- django + vue 
 - postgres
 - parser
 
