@@ -5,8 +5,6 @@ from pydantic import BaseModel
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from tests.materials.db_list import db_list
-
 from db.session import SessionLocal
 
 app = FastAPI()
@@ -46,7 +44,7 @@ def add_title(url: str, element: str, block: str):
 
 @app.get('/')
 def main():
-    return db_list
+    return 'OK'
 
 
 if __name__ == "__main__":
