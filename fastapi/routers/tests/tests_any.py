@@ -1,19 +1,17 @@
-import pytest
-import requests
+from fastapi.testclient import TestClient
+from db.session import SessionLocal
+from main import app
+
+
+session = SessionLocal()
+
+client = TestClient(app)
 
 
 class TestAny:
     """
     playground
     """
-
     def test_get(self):
-        response = requests.get(url="http://localhost:8000/")
-        print(response.content.decode('utf-8'))
-
-    def test_1(self):
-        response = requests.post(
-            url="http://localhost:8000/add",
-            data='a1'
-        )
+        response = client.get(url="/")
         print(response.content.decode('utf-8'))

@@ -5,8 +5,6 @@ from pydantic import BaseModel
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from db.session import SessionLocal
-
 from routers.user import router as user_router
 
 
