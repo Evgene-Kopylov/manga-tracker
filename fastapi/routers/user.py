@@ -12,7 +12,7 @@ router = APIRouter()
 
 
 @router.post('/user_registration')
-def user_registration(request: UserRegistrationSchema) -> Dict:
+def user_registration(request: UserRegistrationSchema) -> Dict[str, Any]:
     user = session.query(User).filter_by(email=request.email).first()
     if user:
         return {'msg': 'User with this email already exists.'}
