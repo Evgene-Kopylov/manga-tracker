@@ -7,6 +7,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from db.session import SessionLocal
 
+from routers.user import router as user_router
+
+
 app = FastAPI()
 
 app.add_middleware(
@@ -19,7 +22,7 @@ app.add_middleware(
 
 templates = Jinja2Templates(directory="templates")
 
-db = SessionLocal()
+app.include_router(user_router)
 
 
 class PageScenario(BaseModel):
