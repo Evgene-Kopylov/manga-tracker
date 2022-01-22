@@ -1,41 +1,35 @@
 import unittest
+
+from db.models import Page
 from db.session import SessionLocal
-from db.models import User
 
 
 class TestPostgreDBSession(unittest.TestCase):
 
     def setUp(self) -> None:
         self.session = SessionLocal()
-        self.email = '***abra+0@cadabra.test'
-        user = self.session.query(User).filter_by(email=self.email).first()
-        if not user:
-            self.test_create_user()
+        self.url = 'http://abra.cadabra.test'
+        pages = self.session.query(Page).filter_by(url=self.url)
+        if not pages:
+            self.test_create_page()
 
     def tearDown(self) -> None:
-        user = self.session.query(User).filter_by(email=self.email).first()
-        if user:
-            self.test_delete_user()
+        pages = self.session.query(Page).filter_by(url=self.url).all()
+        if pages:
+            for p in pages:
+                self.test_delete_page()
 
-    def test_create_user(self):
-        user = self.session.query(User).filter_by(email=self.email).first()
-        if not user:
-            user = User()
-            user.email = self.email
-            self.session.add(user)
+    def test_create_page(self):
+        page = self.session.query(Page).filter_by(url=self.url).first()
+        if not page:
+            page = Page()
+            page.url = self.url
+            self.session.add(page)
             self.session.commit()
-            assert user in self.session.query(User).all()
+            assert page in self.session.query(Page).all()
 
-    def test_user_exists(self):
-        user = self.session.query(User).filter_by(email=self.email).first()
-        assert user
-
-    def test_delete_user(self):
-        user = self.session.query(User).filter_by(email=self.email).first()
-        print(user.id)
-        print(user.email)
-        self.session.delete(user)
+    def test_delete_page(self):
+        self.test_create_page()
+        page = self.session.query(Page).filter_by(url=self.url).first()
+        self.session.delete(page)
         self.session.commit()
-
-    def test_save_scenario(self):
-        pass

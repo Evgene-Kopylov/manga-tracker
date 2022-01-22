@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers.user import router as user_router
+from routers.page import router as page_router
 
 
 app = FastAPI()
@@ -20,7 +20,7 @@ app.add_middleware(
 
 templates = Jinja2Templates(directory="templates")
 
-app.include_router(user_router)
+app.include_router(page_router)
 
 
 class PageScenario(BaseModel):

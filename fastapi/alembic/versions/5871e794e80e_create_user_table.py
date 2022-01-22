@@ -17,27 +17,16 @@ depends_on = None
 
 def upgrade():
     op.create_table(
-        'user',
-        sa.Column('id', sa.Integer, primary_key=True, index=True),
-        sa.Column('email', sa.String(200), nullable=False, unique=True),
-        sa.Column('username', sa.String(200)),
-        sa.Column('password', sa.String(200))
-    )
-    op.create_table(
         'page',
         sa.Column('id', sa.Integer, primary_key=True, index=True),
         sa.Column('url', sa.String(), nullable=False),
         sa.Column('element', sa.String()),
         sa.Column('block', sa.String()),
-    )
-    op.create_table(
-        'page_user',
-        sa.Column('page_id', sa.Integer, primary_key=True),
-        sa.Column('user_id', sa.Integer, primary_key=True)
+        sa.Column('data', sa.String()),
+        sa.Column('content', sa.String()),
+        sa.Column('last_check', sa.Date),
     )
 
 
 def downgrade():
-    op.drop_table('user')
     op.drop_table('page')
-    op.drop_table('page_user')
