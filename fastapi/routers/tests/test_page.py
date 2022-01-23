@@ -15,7 +15,7 @@ client = TestClient(app)
 class TestPage:
     def test_add_page(self):
         response = client.post(
-            url="/add_page",
+            url="/page",
             headers={
                 'api-key': 'api_key2131321554',
             },
