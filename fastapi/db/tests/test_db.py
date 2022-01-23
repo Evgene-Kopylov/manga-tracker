@@ -4,7 +4,7 @@ from db.models import Page
 from db.session import SessionLocal
 
 
-class TestPostgreDBSession(unittest.TestCase):
+class TestPostgresDBSession(unittest.TestCase):
 
     def setUp(self) -> None:
         self.session = SessionLocal()
@@ -16,7 +16,7 @@ class TestPostgreDBSession(unittest.TestCase):
     def tearDown(self) -> None:
         pages = self.session.query(Page).filter_by(url=self.url).all()
         if pages:
-            for p in pages:
+            for _ in pages:
                 self.test_delete_page()
 
     def test_create_page(self):
