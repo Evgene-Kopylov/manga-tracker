@@ -29,7 +29,9 @@ class TestPostgreDBSession(unittest.TestCase):
             assert page in self.session.query(Page).all()
 
     def test_delete_page(self):
-        self.test_create_page()
+        page = self.session.query(Page).filter_by(url=self.url).first()
+        if not page:
+            self.test_create_page()
         page = self.session.query(Page).filter_by(url=self.url).first()
         self.session.delete(page)
         self.session.commit()
