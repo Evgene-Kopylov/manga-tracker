@@ -4,6 +4,7 @@ from typing import List
 import requests
 from db.models import Page
 from bs4 import BeautifulSoup
+from selenium import webdriver
 from db.session import SessionLocal
 
 session = SessionLocal()
@@ -25,8 +26,11 @@ class MangaParser:
         return data
 
     def get_block(self) -> BeautifulSoup | None:
-        data = self.get_data_by_requests()
-        soup = BeautifulSoup(data, 'html.parser')
+        driver = webdriver.Remote(command_executor='http://localhost:4444')
+        driver.get(self.url)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.quit()
+
         if page.element == page.block:
             return soup
         path_block = page.block.replace("> ", "").replace("..", ".")
