@@ -1,7 +1,5 @@
 from db.base import Base
 from sqlalchemy import Boolean, Column, Date, ForeignKey, Integer, String
-from sqlalchemy.sql.schema import Table
-from sqlalchemy.orm import backref, relationship
 
 
 class Page(Base):
