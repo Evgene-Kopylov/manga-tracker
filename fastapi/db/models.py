@@ -1,5 +1,7 @@
+from datetime import datetime
+
 from db.base import Base
-from sqlalchemy import Boolean, Column, Date, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, Date, DateTime, ForeignKey, Integer, String
 
 
 class Page(Base):
@@ -9,6 +11,6 @@ class Page(Base):
     block = Column(String)
     data = Column(String)
     content = Column(String)
-    last_check = Column(Date)
-    last_update = Column(Date)
+    last_check = Column(DateTime, default=datetime.now())
+    last_update = Column(DateTime, default=datetime.now())
     chapters = Column(String(50000), default='')
