@@ -12,3 +12,5 @@ class Page(Base):
     data = Column(String)
     content = Column(String)
     last_check = Column(Date)
+    last_update = Column(Date)
+    chapters = Column(String(50000), default='')

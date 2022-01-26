@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import List
 
 import requests
-
 from db.models import Page
 from bs4 import BeautifulSoup
 from db.session import SessionLocal
@@ -63,10 +62,33 @@ class MangaParser:
         lines = block.select(path[-1])
         return [chapter.get_text().strip().replace(',', '')[:100] for chapter in lines]
 
+    def page_update(self) -> None:
+        chapters = self.extract_content()
+        if not chapters:
+            return
+
+        chapters_list = [c for c in self.page.chapters.split(", ") if c]  # FIX if c
+        for ch in chapters:
+            if ch and ch != ' ' and ch not in chapters_list:
+                chapters_list.append(ch)
+                self.page.last_update = datetime.now()
+
+        self.page.chapters = ", ".join(chapters_list)
+        print(self.page.chapters)
+
+        if len(self.page.chapters) >= 50000:
+            self.page.chapters = ''
+            print('lenth owerflow')
+            print(f"{self.page.name=}")
+            print(f"{self.page.last_upd=}")
+
+        self.page.last_check = datetime.now()
+        session.commit()
+
 
 if __name__ == "__main__":
     pages = session.query(Page).all()
     for page in pages:
         mp = MangaParser(page)
-        chapters = mp.extract_content()
-        print(chapters)
+        mp.page_update()
+
