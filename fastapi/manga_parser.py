@@ -1,3 +1,5 @@
+import random
+import threading
 from datetime import datetime
 from typing import List
 
@@ -11,7 +13,8 @@ session = SessionLocal()
 
 
 class MangaParser:
-    def __init__(self, page: Page) -> None:
+    def __init__(self, page: Page, browser: str = 'chrome') -> None:
+        self.browser = browser
         self.page = page
         self.url = page.url
         self.block = page.block
@@ -26,14 +29,25 @@ class MangaParser:
         return data
 
     def get_block(self) -> BeautifulSoup | None:
-        driver = webdriver.Remote(command_executor='http://localhost:4444')
+        if self.browser == 'firefox':
+            firefox_options = webdriver.FirefoxOptions()
+            driver = webdriver.Remote(
+                command_executor='http://localhost:4444',
+                options=firefox_options
+            )
+        else:
+            chrome_options = webdriver.ChromeOptions()
+            driver = webdriver.Remote(
+                command_executor='http://localhost:4444',
+                options=chrome_options
+            )
         driver.get(self.url)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         driver.quit()
 
-        if page.element == page.block:
+        if self.element == self.block:
             return soup
-        path_block = page.block.replace("> ", "").replace("..", ".")
+        path_block = self.block.replace("> ", "").replace("..", ".")
 
         path = [i for i in path_block.split()]
         L = len(path)
@@ -59,7 +73,7 @@ class MangaParser:
         if not block:  # страница недоступна, возможно, требует авторизации.
             return None
 
-        path_element = page.element.replace("> ", "").replace("..", ".")
+        path_element = self.element.replace("> ", "").replace("..", ".")
         path = [i for i in path_element.split()]
         if not path or len(path) < 2:  # нет пути к элементу
             return None
@@ -92,7 +106,19 @@ class MangaParser:
 
 if __name__ == "__main__":
     pages = session.query(Page).all()
-    for page in pages:
-        mp = MangaParser(page)
-        mp.page_update()
+    random.shuffle(pages)
 
+    def thread(pages, browser):
+        for page in pages:
+            mp = MangaParser(page, browser)
+            mp.page_update()
+
+
+    i = len(pages)
+    fox_pages = pages[:(i//2)]
+    fox_thread = threading.Thread(target=thread, args=(fox_pages, 'firefox',))
+    chrome_pages = pages[(i//2):]
+    chrome_thread = threading.Thread(target=thread, args=(chrome_pages, 'chrome',))
+
+    fox_thread.start()
+    chrome_thread.start()
