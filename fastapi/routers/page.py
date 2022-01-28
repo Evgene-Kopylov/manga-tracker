@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash
 from db.models import Page
 from db.schemas.page import AddPageSchema
 from db.session import SessionLocal
+from routers.page_functions import get_name
 
 session = SessionLocal()
 router = APIRouter()
@@ -25,6 +26,7 @@ def user_registration(request: Request, page: AddPageSchema) -> Dict[str, Any]:
         'api-key': my_header
     }
 
+
 @router.get('/add_page')
 # def add_page(request: Request, p: AddPageSchema) -> Dict[str, Any]:
 def add_page(url: str, element: str, block: str
@@ -33,6 +35,7 @@ def add_page(url: str, element: str, block: str
     page.url = url
     page.element = element
     page.block = block
+    page.name = get_name(url)
     session.add(page)
     session.commit()
     return {

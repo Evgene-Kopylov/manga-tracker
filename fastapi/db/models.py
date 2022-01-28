@@ -7,6 +7,7 @@ from sqlalchemy import Boolean, Column, Date, DateTime, ForeignKey, Integer, Str
 class Page(Base):
     id = Column(Integer, primary_key=True, index=True)
     url = Column(String, nullable=False)
+    name = Column(String(200))
     element = Column(String)
     block = Column(String)
     data = Column(String)

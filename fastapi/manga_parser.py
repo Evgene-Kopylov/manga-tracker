@@ -105,13 +105,16 @@ class MangaParser:
 
 
 if __name__ == "__main__":
-    pages = session.query(Page).all()
-    random.shuffle(pages)
+    pages = session.query(Page).all()[::-1]
+    # random.shuffle(pages)
 
     def thread(pages, browser):
         for page in pages:
-            mp = MangaParser(page, browser)
-            mp.page_update()
+            try:
+                mp = MangaParser(page, browser)
+                mp.page_update()
+            except Exception as e:
+                print(e)
 
 
     i = len(pages)

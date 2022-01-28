@@ -1,4 +1,4 @@
-"""create user page page_user
+"""create table page
 
 Revision ID: 5871e794e80e
 Revises: 
