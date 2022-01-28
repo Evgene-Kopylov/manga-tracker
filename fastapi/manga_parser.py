@@ -49,23 +49,23 @@ class MangaParser:
             return soup
         path_block = self.block.replace("> ", "").replace("..", ".")
 
-        path = [i for i in path_block.split()]
+        path = [j for j in path_block.split()]
         L = len(path)
-        for i in range(L):
-            path_block_t = ' '.join(path[i:])
+        for k in range(L):
+            path_block_t = ' '.join(path[k:])
             block = soup.select_one(path_block_t)
             if block:
                 return block
 
-        path = [i for i in path_block.split()]
+        path = [j for j in path_block.split()]
         L = len(path)
-        for i in range(L):
+        for m in range(L):
             _path = ' '.join(path)
             block = soup.select_one(_path)
             if block:
                 return block
             else:
-                path = path[:L - i]
+                path = path[:L - m]
         return None
 
     def extract_content(self) -> List | None:
@@ -74,7 +74,7 @@ class MangaParser:
             return None
 
         path_element = self.element.replace("> ", "").replace("..", ".")
-        path = [i for i in path_element.split()]
+        path = [j for j in path_element.split()]
         if not path or len(path) < 2:  # нет пути к элементу
             return None
         lines = block.select(path[-1])
@@ -96,7 +96,7 @@ class MangaParser:
 
         if len(self.page.chapters) >= 50000:
             self.page.chapters = ''
-            print('lenth owerflow')
+            print('length overflow')
             print(f"{self.page.name=}")
             print(f"{self.page.last_upd=}")
 
@@ -105,11 +105,11 @@ class MangaParser:
 
 
 if __name__ == "__main__":
-    pages = session.query(Page).all()[::-1]
+    pages = session.query(Page).all()
     # random.shuffle(pages)
 
-    def thread(pages, browser):
-        for page in pages:
+    def thread(pgs, browser):
+        for page in pgs:
             try:
                 mp = MangaParser(page, browser)
                 mp.page_update()

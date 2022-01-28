@@ -1,7 +1,6 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
-from fastapi import APIRouter, Header, Request
-from werkzeug.security import generate_password_hash
+from fastapi import APIRouter, Request
 
 from db.models import Page
 from db.schemas.page import AddPageSchema
@@ -13,7 +12,8 @@ router = APIRouter()
 
 
 @router.post('/page')
-def user_registration(request: Request, page: AddPageSchema) -> Dict[str, Any]:
+def user_registration(request: Request, page: AddPageSchema
+                      ) -> Dict[str, Any]:
     p = Page()
     p.url = page.url
     p.element = page.element
@@ -28,7 +28,6 @@ def user_registration(request: Request, page: AddPageSchema) -> Dict[str, Any]:
 
 
 @router.get('/add_page')
-# def add_page(request: Request, p: AddPageSchema) -> Dict[str, Any]:
 def add_page(url: str, element: str, block: str
              ) -> Dict[str, Any]:
     page = Page()
