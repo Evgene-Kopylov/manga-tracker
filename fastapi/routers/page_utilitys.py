@@ -35,7 +35,7 @@ def get_name(url: str) -> str:
     line = ' '.join(i for i in path)
     if line == '':
         line = reserve
-    name = line[0]
+    name = line[0].upper()
     for i in range(1, len(line)):
         if not line[i - 1].isalpha() and line[i].isalpha():
             name += line[i].upper()

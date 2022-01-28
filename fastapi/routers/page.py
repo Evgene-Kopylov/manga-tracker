@@ -5,7 +5,7 @@ from fastapi import APIRouter, Request
 from db.models import Page
 from db.schemas.page import AddPageSchema
 from db.session import SessionLocal
-from routers.page_functions import get_name
+from routers.page_utilitys import get_name
 
 session = SessionLocal()
 router = APIRouter()
