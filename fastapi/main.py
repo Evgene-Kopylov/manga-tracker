@@ -10,7 +10,7 @@ from db.models import Page
 from db.session import SessionLocal
 from routers.page import router as page_router
 
-from typing import List, Dict
+from typing import List
 
 from fastapi import WebSocket, WebSocketDisconnect
 
@@ -108,11 +108,11 @@ async def get(request: Request):
 
 
 @app.websocket("/ws/{client_id}")
-async def websocket_endpoint(websocket: WebSocket, client_id: int):
+async def websocket_endpoint(websocket: WebSocket):
     await chat_manager.connect(websocket)
     try:
         while True:
-            flag = await websocket.receive_text()
+            await websocket.receive()
             await chat_manager.broadcast_obj(get_pages())
     except WebSocketDisconnect:
         chat_manager.disconnect(websocket)
