@@ -2,22 +2,16 @@
 {% block title %}Watchlist{% endblock %}
 {% block content %}
     <h1>List all</h1>
+    <h4>connect id: <span id="ws-id"></span></h2>
     <hr>
     <hr>
     <table>
-        <tbody id="user_list">
-            <tr>
-                <td>column_0</td>
-                <td>column_1</td>
-                <td>column_2</td>
-            </tr>
-        </tbody>
+        <tbody id="user_list"></tbody>
     </table>
     <hr>
-    <h4>Your ID: <span id="ws-id"></span></h2>
     <form action="" onsubmit="sendMessage(event)">
-        <input type="text" id="messageText" autocomplete="off"/>
-        <button>Send</button>
+        <!-- <input type="text" id="messageText" autocomplete="off"/> -->
+        <button>:(</button>
     </form>
     <script src="{{ url_for('static', path='/list_all.js') }}"></script>
 {% endblock %}
