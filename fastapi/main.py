@@ -10,7 +10,7 @@ from db.models import Page
 from db.session import SessionLocal
 from routers.page import router as page_router
 
-from typing import List
+from typing import List, Dict
 
 from fastapi import WebSocket, WebSocketDisconnect
 
@@ -53,8 +53,7 @@ def add_title(url: str, element: str, block: str):
     return scenario
 
 
-@app.get('/')  # @app.get('/list_all')
-def user_watchlist(request: Request):
+def get_pages() -> List[Dict]:
     pages = session.query(Page).all()
     collection = [
         {
@@ -67,13 +66,12 @@ def user_watchlist(request: Request):
         } for page in pages
     ]
     collection.sort(key=lambda x: x['last_update'])
-    return templates.TemplateResponse(
-        "watchlist.html",
-        {
-            "request": request,
-            'collection': collection
-        }
-    )
+    return collection
+
+
+@app.get('/')  # @app.get('/list_all')
+def user_watchlist(request: Request):
+    return get_pages()
 
 
 class ChatConnectionManager:
