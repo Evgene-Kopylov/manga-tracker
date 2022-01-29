@@ -54,7 +54,8 @@ class MangaParser:
             driver.get(self.page.url)
             soup = BeautifulSoup(driver.page_source, 'html.parser')
             driver.quit()
-        except driver.error_handler:
+        except Exception as e:
+            print(e)
             driver.quit()
             return
 
