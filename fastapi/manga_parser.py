@@ -1,4 +1,3 @@
-import random
 import threading
 from datetime import datetime
 from typing import List
@@ -13,7 +12,17 @@ session = SessionLocal()
 
 
 class MangaParser:
-    def __init__(self, page: Page, browser: str = 'chrome') -> None:
+    """
+    Retrieves the contents of lists,
+    mostly chapter names from lists.
+    """
+    def __init__(self, page: Page, browser: int = 0) -> None:
+        """
+
+        :param page:
+        :param browser: 0 - firefox,
+                        1 - chrome
+        """
         self.browser = browser
         self.page = page
         self.url = page.url
@@ -29,21 +38,25 @@ class MangaParser:
         return data
 
     def get_block(self) -> BeautifulSoup | None:
-        if self.browser == 'firefox':
-            firefox_options = webdriver.FirefoxOptions()
-            driver = webdriver.Remote(
-                command_executor='http://localhost:4444',
-                options=firefox_options
-            )
-        else:
+        if self.browser == 1:
             chrome_options = webdriver.ChromeOptions()
             driver = webdriver.Remote(
                 command_executor='http://localhost:4444',
                 options=chrome_options
             )
-        driver.get(self.url)
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
-        driver.quit()
+        else:
+            firefox_options = webdriver.FirefoxOptions()
+            driver = webdriver.Remote(
+                command_executor='http://localhost:4444',
+                options=firefox_options
+            )
+        try:
+            driver.get(self.page.url)
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            driver.quit()
+        except driver.error_handler:
+            driver.quit()
+            return
 
         if self.element == self.block:
             return soup
