@@ -1,32 +1,23 @@
 {% extends "base_template.html" %}
 {% block title %}Watchlist{% endblock %}
 {% block content %}
-    <h1>Watchlist</h1>
-    <h3>Collection:</h3>
-    {% for item in collection %}
-        <h3 id="page_id_{{ item.id }}">{{ item.id }} OK</h3>
-    {% endfor %}
-    <h3>Table</h3>
+    <h1>List all</h1>
+    <hr>
+    <hr>
     <table>
         <tbody id="user_list">
             <tr>
-                <td>a</td>
-                <td>b</td>
-                <td>c</td>
+                <td>column_0</td>
+                <td>column_1</td>
+                <td>column_2</td>
             </tr>
         </tbody>
     </table>
     <hr>
-    <h3>Example</h3>
-    <h1>WebSocket Chat</h1>
-    <h2>Your ID: <span id="ws-id"></span></h2>
-    <h2>Pages: <span id="pages_lenth">{{ pages|length }}</span></h2>
-    <h2>Pages: <span id="pages">{{ pages }}</span></h2>
+    <h4>Your ID: <span id="ws-id"></span></h2>
     <form action="" onsubmit="sendMessage(event)">
         <input type="text" id="messageText" autocomplete="off"/>
         <button>Send</button>
     </form>
-    <ul id='messages'>
-    </ul>
     <script src="{{ url_for('static', path='/list_all.js') }}"></script>
 {% endblock %}

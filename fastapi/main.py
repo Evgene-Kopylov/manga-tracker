@@ -59,6 +59,7 @@ def get_pages() -> List:
         {
             'id': page.id,
             'url': page.url,
+            'name': page.name,
             'last_chapters': [ch for ch in page.chapters.split(', ')][:5],
             'chapters_total': len([ch for ch in page.chapters.split(', ')]),
             'last_check': str(page.last_check),
@@ -69,9 +70,10 @@ def get_pages() -> List:
     return collection
 
 
-@app.get('/')  # @app.get('/list_all')
-def user_watchlist(request: Request):
-    return get_pages()
+@app.get("/")
+async def get(request: Request):
+    return templates.TemplateResponse(
+        "list_all.html", {"request": request})
 
 
 class ChatConnectionManager:
@@ -84,14 +86,6 @@ class ChatConnectionManager:
 
     def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
-
-    @staticmethod
-    async def send_personal_message(message: str, websocket: WebSocket):
-        await websocket.send_text(message)
-
-    async def broadcast(self, message: str):
-        for connection in self.active_connections:
-            await connection.send_text(message)
 
     async def broadcast_obj(self, obj: List):
         for connection in self.active_connections:
