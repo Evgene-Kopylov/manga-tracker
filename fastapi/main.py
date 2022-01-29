@@ -53,7 +53,7 @@ def add_title(url: str, element: str, block: str):
     return scenario
 
 
-def get_pages() -> List[Dict]:
+def get_pages() -> List:
     pages = session.query(Page).all()
     collection = [
         {
@@ -61,8 +61,8 @@ def get_pages() -> List[Dict]:
             'url': page.url,
             'last_chapters': [ch for ch in page.chapters.split(', ')][:5],
             'chapters_total': len([ch for ch in page.chapters.split(', ')]),
-            'last_check': page.last_check,
-            'last_update': page.last_update
+            'last_check': str(page.last_check),
+            'last_update': str(page.last_update)
         } for page in pages
     ]
     collection.sort(key=lambda x: x['last_update'])
@@ -93,6 +93,10 @@ class ChatConnectionManager:
         for connection in self.active_connections:
             await connection.send_text(message)
 
+    async def broadcast_obj(self, obj: List):
+        for connection in self.active_connections:
+            await connection.send_json(obj)
+
 
 chat_manager = ChatConnectionManager()
 
@@ -114,12 +118,11 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
     await chat_manager.connect(websocket)
     try:
         while True:
-            data = await websocket.receive_text()
-            await chat_manager.send_personal_message(f"You wrote: {data}", websocket)
-            await chat_manager.broadcast(f"Client #{client_id} says: {data}")
+            flag = await websocket.receive_text()
+            await chat_manager.broadcast_obj(get_pages())
     except WebSocketDisconnect:
         chat_manager.disconnect(websocket)
-        await chat_manager.broadcast(f"Client #{client_id} left the chat")
+        # await chat_manager.broadcast(f"Client #{client_id} left the chat")
 
 
 if __name__ == "__main__":

@@ -1,13 +1,15 @@
+import unittest
+
 from fastapi.testclient import TestClient
 from db.session import SessionLocal
-from main import app
+from main import app, get_pages
 
 session = SessionLocal()
 
 client = TestClient(app)
 
 
-class TestAny:
+class TestAny(unittest.TestCase):
     """
     playground
     """
@@ -27,13 +29,6 @@ class TestAny:
         print('')
         print(response.content.decode('utf-8'))
 
+    def test_get_pages(self):
+        print(get_pages())
 
-tests_any = {
-    "detail": [
-        {
-            "loc": ["query", "request"],
-            "msg": "field required",
-            "type": "value_error.missing"
-        }
-    ]
-}

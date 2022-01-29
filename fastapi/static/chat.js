@@ -5,6 +5,9 @@ ws.onmessage = function(event) {
     var messages = document.getElementById('messages')
     var message = document.createElement('li')
     var content = document.createTextNode(event.data)
+//    var content = document.createTextNode(eval(event.data)[0]['name'])
+    var content = document.createTextNode(Object.keys(eval(event.data)[0]))
+
     message.appendChild(content)
     messages.appendChild(message)
 };
