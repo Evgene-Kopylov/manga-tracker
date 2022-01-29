@@ -7,9 +7,9 @@ def remove_index_number(line: str) -> str:
     """
     res = ''
     for char in line:
-        if res and char.isdigit():
+        if res:
             res += char
-        if not char.isdigit():
+        elif not char.isdigit():
             res += char
     return res
 
