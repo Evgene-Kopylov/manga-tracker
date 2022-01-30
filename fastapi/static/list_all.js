@@ -31,7 +31,7 @@ ws.onmessage = function(event) {
             }).appendTo("#page_" + item.id)
 
             $("<td>", {
-                text: item.new || '*'
+                text: item.new || '(+new)'
             }).appendTo("#page_" + item.id)
             
             $("<td>", {
