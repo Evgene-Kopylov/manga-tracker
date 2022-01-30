@@ -64,22 +64,22 @@ class MangaParser:
         path_block = self.block.replace("> ", "").replace("..", ".")
 
         path = [j for j in path_block.split()]
-        L = len(path)
-        for k in range(L):
+        path_len = len(path)
+        for k in range(path_len):
             path_block_t = ' '.join(path[k:])
             block = soup.select_one(path_block_t)
             if block:
                 return block
 
         path = [j for j in path_block.split()]
-        L = len(path)
-        for m in range(L):
+        path_len = len(path)
+        for m in range(path_len):
             _path = ' '.join(path)
             block = soup.select_one(_path)
             if block:
                 return block
             else:
-                path = path[:L - m]
+                path = path[:path_len - m]
         return None
 
     def extract_content(self) -> List | None:
