@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Request
 import uvicorn
-from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +8,7 @@ from starlette.staticfiles import StaticFiles
 from db.models import Page
 from db.session import SessionLocal
 from routers.page import router as page_router
+from routers.list_all import router as list_all_router
 
 from typing import List
 
@@ -26,9 +26,9 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-templates = Jinja2Templates(directory="templates")
 
 app.include_router(page_router)
+app.include_router(list_all_router)
 
 session = SessionLocal()
 
@@ -68,12 +68,6 @@ def get_pages() -> List:
     ]
     collection.sort(key=lambda x: x['last_update'])
     return collection
-
-
-@app.get("/")
-async def get(request: Request):
-    return templates.TemplateResponse(
-        "list_all.html", {"request": request})
 
 
 class ChatConnectionManager:
