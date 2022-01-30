@@ -21,6 +21,8 @@ def get_name(url: str) -> str:
     :param url: page.url
     :return: convenient part of page.url
     """
+    if '#' in url:
+        url = url[:url.index('#')]
     split_address = [i for i in url.split('/') if i != '']
     # print(f"{split_address=}")
     reserve = ' '.join(split_address[1:2])
