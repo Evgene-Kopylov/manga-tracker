@@ -6,18 +6,21 @@ ws.onmessage = function(event) {
     for (var i in eval(event.data)) {
         var item = collection[i]
         
-        $("<tr>", {
-            id: 'page_' + item.id
-        }).prependTo("#user_list")
+        if ($('#page_' + item.id).length) {
+            console.log('ok')
+        } else {
+            $("<tr>", {
+                id: 'page_' + item.id
+            }).prependTo("#user_list")
 
-        $("<td>", {
-            text: item.name
-        }).appendTo("#page_" + item.id)
+            $("<td>", {
+                text: item.name
+            }).appendTo("#page_" + item.id)
 
-        $("<td>", {
-            text: item.chapters_total
-        }).appendTo("#page_" + item.id)
-
+            $("<td>", {
+                text: item.chapters_total
+            }).appendTo("#page_" + item.id)
+        }
     }
 };
 function sendMessage(event) {
