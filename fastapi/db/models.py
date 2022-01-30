@@ -1,7 +1,8 @@
 from datetime import datetime
+from typing import List
 
 from db.base import Base
-from sqlalchemy import Boolean, Column, Date, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, Integer, String
 
 
 class Page(Base):
@@ -15,3 +16,17 @@ class Page(Base):
     last_check = Column(DateTime, default=datetime.now())
     last_update = Column(DateTime, default=datetime.now())
     chapters = Column(String(50000), default='')
+
+    def chapters_list(self) -> List:
+        """
+
+        :return: List of chapters
+        """
+        return [x for x in self.chapters.split(', ') if x]
+
+    def chapters_total(self) -> int:
+        """
+
+        :return: number of detected chapters
+        """
+        return len(self.chapters_list())

@@ -40,6 +40,7 @@ def add_page(url: str, element: str, block: str
     return {
         'msg': f'{page.id=} added.',
         'url': url[:100] or url,
-        'element': ('...' + element[-50:]) or element,
-        'block': ('...' + block[-50:]) or block,
+        'name': page.name,
+        'element': ('... ' + element[-50:]) or element,
+        'block': ('... ' + block[-50:]) or block,
     }
