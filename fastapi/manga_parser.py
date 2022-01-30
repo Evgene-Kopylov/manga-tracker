@@ -19,8 +19,8 @@ class MangaParser:
     def __init__(self, page: Page, browser: int = 0) -> None:
         """
 
-        :param page:
-        :param browser: 0 - firefox,
+        @param page:
+        @param browser: 0 - firefox,
                         1 - chrome
         """
         self.browser = browser
