@@ -17,14 +17,15 @@ ws.onmessage = function(event) {
             }).appendTo("#page_" + item.id)
 
             $("<td>", {
-                id: "edit_page_name_" + item.id,
-                class: 'edit_page_name',
+                id: "edit_name_page_" + item.id,
             }).appendTo("#page_" + item.id)
 
                 $("<button>", {
+                    id: '#edit_page',
+                    class: 'edit_name',
                     value: item.id,
                     text: '/'
-                }).appendTo("#edit_page_name_" + item.id)
+                }).appendTo("#edit_name_page_" + item.id)
 
             $("<td>", {
                 text: item.chapters_total
@@ -35,38 +36,39 @@ ws.onmessage = function(event) {
             }).appendTo("#page_" + item.id)
             
             $("<td>", {
-                id: "remove_page_" + item.id,
-                class: 'remove_page',
+                id: "td_remove_page_" + item.id,
             }).appendTo("#page_" + item.id)
 
                 $("<button>", {
+                    id: "remove_page_" + item.id,
+                    class: 'remove_page',
                     value: item.id,
                     text: 'X'
-                }).appendTo("#remove_page_" + item.id)
+                }).appendTo("td#td_remove_page_" + item.id)
         }
     }
 };
 function sendMessage(event) {
-    ws.send(JSON.stringify({msg: 'event'}))
+    ws.send(JSON.stringify({msg: event}))
     event.preventDefault()
 };
 
 window.addEventListener('focus', sendMessage);
 
-$(document).on("click",".edit_page_name", function () {
+$(document).on("click",".edit_name", function () {
     var clickedBtnID = this.id
     console.log('you clicked on button #' + clickedBtnID)
-    ws.send(JSON.stringify({msg: 'edit', id: this.id}))
+    ws.send(JSON.stringify({id: this.id, value: this.value}));
 });
 
 $(document).on("click",".remove_page", function () {
     var clickedBtnID = this.id
     console.log('you clicked on button #' + clickedBtnID)
-    ws.send(JSON.stringify({msg: 'remove', id: this.id}))
+    ws.send(JSON.stringify({id: this.id, value: this.value}));
 });
 
 
-const refresh_interval = 3000
+const refresh_interval = 30000
 setInterval(function() {
     console.log('Interval reached every ' + 
                 refresh_interval + ' msec')
@@ -77,4 +79,4 @@ setInterval(function() {
     }
 }, refresh_interval);
 
-ws.onopen = () => ws.send(JSON.stringify({msg: 'New connect.'}));
+ws.onopen = () => ws.send(JSON.stringify({msg: 'ws.onopen'}));
