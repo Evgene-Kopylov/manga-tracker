@@ -23,6 +23,9 @@ def get_name(url: str) -> str:
     """
     if '#' in url:
         url = url[:url.index('#')]
+    if '?' in url:
+        url = url[:url.index('?')]
+
     split_address = [i for i in url.split('/') if i != '']
     # print(f"{split_address=}")
     reserve = ' '.join(split_address[1:2])
@@ -43,8 +46,6 @@ def get_name(url: str) -> str:
             name += line[i].upper()
         else:
             name += line[i]
-    if '?' in name:
-        name = name[:name.index('?')]
     name = name.replace('-', ' ')
     name = name.replace('  ', ' ')
     name = name.strip()
