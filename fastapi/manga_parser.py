@@ -13,13 +13,13 @@ session = SessionLocal()
 
 class MangaParser:
     """
-    Retrieves the contents of lists,
+    Retrieves the contents of lists on web pages,
     mostly chapter names from lists.
     """
     def __init__(self, page: Page, browser: int = 0) -> None:
         """
 
-        @param page:
+        @param page: Page object
         @param browser: 0 - firefox,
                         1 - chrome
         """
@@ -120,7 +120,6 @@ class MangaParser:
 
 if __name__ == "__main__":
     pages = session.query(Page).all()
-    # random.shuffle(pages)
 
     def thread(pgs, browser):
         for page in pgs:
