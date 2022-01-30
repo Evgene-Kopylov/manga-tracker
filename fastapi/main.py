@@ -87,36 +87,23 @@ class ChatConnectionManager:
     def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
 
-    async def broadcast_obj(self, obj: List):
+    async def broadcast(self, obj: List):
         for connection in self.active_connections:
             await connection.send_json(obj)
 
 
-chat_manager = ChatConnectionManager()
+websocket_manager = ChatConnectionManager()
 
 
-@app.get("/chat")
-async def get(request: Request):
-    pages = session.query(Page).all()
-    return templates.TemplateResponse(
-        "chat.html",
-        {
-            "request": request,
-            'pages': pages
-        }
-    )
-
-
-@app.websocket("/ws/{client_id}")
+@app.websocket("/ws/list_all")
 async def websocket_endpoint(websocket: WebSocket):
-    await chat_manager.connect(websocket)
+    await websocket_manager.connect(websocket)
     try:
         while True:
             await websocket.receive()
-            await chat_manager.broadcast_obj(get_pages())
+            await websocket_manager.broadcast(get_pages())
     except WebSocketDisconnect:
-        chat_manager.disconnect(websocket)
-        # await chat_manager.broadcast(f"Client #{client_id} left the chat")
+        websocket_manager.disconnect(websocket)
 
 
 if __name__ == "__main__":

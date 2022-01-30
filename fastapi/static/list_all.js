@@ -1,7 +1,4 @@
-var client_id = Date.now()
-
-$("#ws-id").textContent = client_id;
-var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+var ws = new WebSocket(`ws://localhost:8000/ws/list_all`);
 ws.onmessage = function(event) {
     var tbody = $('#user_list')
     var collection = eval(event.data)
