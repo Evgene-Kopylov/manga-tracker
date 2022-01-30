@@ -1,4 +1,4 @@
-from routers.page_utilitys import remove_index_number, get_name
+from routers.page_utils import remove_index_number, get_name
 
 
 def test_get_name():
