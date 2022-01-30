@@ -47,7 +47,7 @@ ws.onmessage = function(event) {
     }
 };
 function sendMessage(event) {
-    ws.send('OK')
+    ws.send(JSON.stringify({msg: 'event'}))
     event.preventDefault()
 };
 
@@ -56,13 +56,13 @@ window.addEventListener('focus', sendMessage);
 $(document).on("click",".edit_page_name", function () {
     var clickedBtnID = this.id
     console.log('you clicked on button #' + clickedBtnID)
-    ws.send(this.id)
+    ws.send(JSON.stringify({msg: 'edit', id: this.id}))
 });
 
 $(document).on("click",".remove_page", function () {
     var clickedBtnID = this.id
     console.log('you clicked on button #' + clickedBtnID)
-    ws.send(this.id)
+    ws.send(JSON.stringify({msg: 'remove', id: this.id}))
 });
 
 
@@ -77,4 +77,4 @@ setInterval(function() {
     }
 }, refresh_interval);
 
-ws.onopen = () => ws.send("New connect.");
+ws.onopen = () => ws.send(JSON.stringify({msg: 'New connect.'}));
