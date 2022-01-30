@@ -1,16 +1,12 @@
 {% extends "base_template.html" %}
-{% block title %}Watchlist{% endblock %}
+{% block title %}List all{% endblock %}
 {% block content %}
     <h1>List all</h1>
-    <h4>connect id: <span id="ws-id"></span></h4>
     <hr>
     <hr>
     <table>
         <tbody id="user_list"></tbody>
     </table>
     <hr>
-    <form action="" onsubmit="sendMessage(event)">
-        <button>:(</button>
-    </form>
     <script src="{{ url_for('static', path='/list_all.js') }}"></script>
 {% endblock %}
