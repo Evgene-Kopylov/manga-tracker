@@ -19,7 +19,7 @@ ws.onmessage = function (event) {
 
       $('#page_' + item.id).html(`
       <td class="page_name">
-          <a id="link_page_${item.id}"  href="${item.url}">${item.name}</a>
+          <a id="link_page_${item.id}" class="page_url" onclick="return false;" href="${item.url}">${item.name}</a>
       </td>
       <td>
           <button id="edit_page_${item.id}" class="edit_name" value="${item.id}">
@@ -93,6 +93,17 @@ $(document).on("click", ".remove_page", function () {
     event: 'remove_page',
     page_id: this.value
   }));
+});
+
+$(document).on("click", ".page_url", function () {
+  console.log('you clicked on button #' + this.id)
+  console.log('href= ' + $(this).attr('href'))
+  ws.send(JSON.stringify({
+    event: 'page_url_click',
+    page_id: this.value
+  }));
+  window.location.replace($(this).attr('href'));
+
 });
 
 const refresh_interval = 30000

@@ -43,8 +43,11 @@ async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
         while True:
-            msg = await websocket.receive()
-            print(msg.get('text'))
+            try:
+                msg = await websocket.receive()
+                print(msg.get('text'))
+            except RuntimeError:
+                break
 
             await manager.broadcast(get_pages())
     except WebSocketDisconnect:
