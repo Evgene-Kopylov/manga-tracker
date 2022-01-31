@@ -27,7 +27,7 @@ class TestPage(unittest.TestCase):
             session.delete(page)
             session.commit()
 
-    def test_add_page(self):
+    def test_post_page(self):
         response = client.post(
             url="/page",
             headers={
@@ -43,3 +43,34 @@ class TestPage(unittest.TestCase):
         page = session.query(Page).filter_by(url=self.url).first()
         assert page.url == self.url
         assert api_key
+
+    def test_add_page(self):
+        pages = session.query(Page).filter_by(url=self.url).all()
+        assert len(pages) == 0
+        response = self.request_add_page()
+        print(response.url)
+        pages = session.query(Page).filter_by(url=self.url).all()
+        assert len(pages) == 1
+
+    def request_add_page(self):
+        response = client.get(
+            url='/add_page',
+            params={
+                "url": self.url,
+                "element": 'body',
+                "block": 'div',
+            }
+        )
+        return response
+
+    def test_duplicate_add_page(self):
+        pages = session.query(Page).filter_by(url=self.url).all()
+        assert len(pages) == 0
+        response = self.request_add_page()
+        pages = session.query(Page).filter_by(url=self.url).all()
+        assert len(pages) == 1
+        response = self.request_add_page()
+        print(response.url)
+        pages = session.query(Page).filter_by(url=self.url).all()
+        assert len(pages) == 1
+
