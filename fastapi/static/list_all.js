@@ -19,7 +19,7 @@ ws.onmessage = function (event) {
 
       $('#page_' + item.id).html(`
       <td class="page_name">
-          <a id="link_page_${item.id}" class="page_url" onclick="return false;" href="${item.url}">${item.name}</a>
+          <a value="${item.id}" id="link_page_${item.id}" class="page_url" onclick="return false;" href="${item.url}">${item.name}</a>
       </td>
       <td>
           <button id="edit_page_${item.id}" class="edit_name" value="${item.id}">
@@ -100,7 +100,7 @@ $(document).on("click", ".page_url", function () {
   console.log('href= ' + $(this).attr('href'))
   ws.send(JSON.stringify({
     event: 'page_url_click',
-    page_id: this.value
+    page_id: $(this).attr('value')
   }));
   window.location.replace($(this).attr('href'));
 
