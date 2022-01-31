@@ -1,0 +1,22 @@
+button.edit_name {
+    border: none;
+    background: none;
+}
+
+button.remove_page {
+    border: none;
+    background: none;
+}
+
+td.page_name{
+    width: 50ch;
+}
+
+input.name_field {
+    border: none;
+}
+
+td.chapters_total,
+td.new {
+    min-width: 3ch;
+}

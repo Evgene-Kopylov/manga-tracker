@@ -13,20 +13,22 @@ ws.onmessage = function (event) {
       }).prependTo("#user_list");
 
       $('#page_' + item.id).html(`
-            <td>
-                <a id="link_page_${item.id}" href="${item.url}">${item.name}</a>
+            <td class="page_name">
+                <a id="link_page_${item.id}"  href="${item.url}">${item.name}</a>
             </td>
             <td>
-                <button id="edit_page_${item.id}" class="edit_name" value="${item.id}">/</button>
+                <button id="edit_page_${item.id}" class="edit_name" value="${item.id}">
+                  &#128394;<i class="bi bi-pen"></i>
+                </button>
             </td>
-            <td>
+            <td class="chapters_total">
                 <span>${item.chapters_total}</span>
             </td>
-            <td>
+            <td class="new">
                 <span>${item.new || ''}</span>
             </td>
             <td>
-                <button id="remove_page_${item.id}" class="remove_page" value="${item.id}">X</button>
+                <button id="remove_page_${item.id}" class="remove_page" value="${item.id}">&#10005;</button>
             </td>
             `);
 
@@ -46,6 +48,8 @@ $(document).on("click", ".edit_name", function () {
 
   var input = $("<input>", {
     id: 'name_field_page_' + this.value,
+    class: 'name_field',
+    size: 50,
     value: old_name,
   })
 
