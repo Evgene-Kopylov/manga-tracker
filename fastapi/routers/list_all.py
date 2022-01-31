@@ -1,8 +1,10 @@
-from typing import List
+import json
+from typing import List, MutableMapping, Any
 
 from fastapi import APIRouter, Request
 from fastapi import WebSocket, WebSocketDisconnect
 
+from db.models import Page
 from db.session import SessionLocal
 from fastapi.templating import Jinja2Templates
 
@@ -38,14 +40,29 @@ async def get(request: Request):
         "list_all.html", {"request": request})
 
 
+def event_action(ws_msg: MutableMapping[str, Any]) -> None:
+    if not ws_msg.get('text'):
+        return
+    msg = json.loads(ws_msg.get('text'))
+    print(msg)
+    match msg.get('event'):
+        case 'remove_page':
+            print(f"{msg=}")
+            _id = int(msg.get('page_id'))
+            page = session.query(Page).filter_by(id=_id).first()
+            session.delete(page)
+            session.commit()
+
+
 @router.websocket("/ws/list_all")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
         while True:
             try:
-                msg = await websocket.receive()
-                print(msg.get('text'))
+                ws_msg = await websocket.receive()
+                print(f"{ws_msg.get('text')=}")
+                event_action(ws_msg)
             except RuntimeError:
                 break
 

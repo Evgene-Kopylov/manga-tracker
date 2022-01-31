@@ -93,6 +93,7 @@ $(document).on("click", ".remove_page", function () {
     event: 'remove_page',
     page_id: this.value
   }));
+  $("#page_" + this.value).remove();
 });
 
 $(document).on("click", ".page_url", function () {
