@@ -30,17 +30,24 @@ def user_registration(request: Request, page: AddPageSchema
 @router.get('/add_page')
 def add_page(url: str, element: str, block: str
              ) -> Dict[str, Any]:
-    page = Page()
-    page.url = url
-    page.element = element
-    page.block = block
-    page.name = get_name(url)
-    session.add(page)
-    session.commit()
+    page = session.query(Page).filter_by(url=url, element=element, block=block).first()
+    if page:
+        print('page duplicate')
+    else:
+        page = Page()
+        page.url = url
+        page.element = element
+        page.block = block
+        page.name = get_name(url)
+        session.add(page)
+        session.commit()
     return {
-        'msg': f'{page.id=} added.',
+        'id': page.id,
         'url': url[:100] or url,
         'name': page.name,
         'element': ('... ' + element[-50:]) or element,
         'block': ('... ' + block[-50:]) or block,
+        'chapters': page.chapters_list(),
+        'total': page.chapters_total(),
+        'new': page.new
     }
