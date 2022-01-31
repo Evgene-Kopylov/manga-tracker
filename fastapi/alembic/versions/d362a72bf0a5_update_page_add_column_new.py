@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column('page', sa.Column('new', sa.Integer, default=0))
+    op.add_column('page', sa.Column('new', sa.Integer, server_default='0'))
 
 
 def downgrade():

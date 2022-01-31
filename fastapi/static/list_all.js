@@ -12,25 +12,30 @@ ws.onmessage = function (event) {
         id: 'page_' + item.id
       }).prependTo("#user_list");
 
+      let item_new = ''
+      if (item.new && item.new) {
+        item_new = `(+${item.new})`
+      }
+
       $('#page_' + item.id).html(`
-            <td class="page_name">
-                <a id="link_page_${item.id}"  href="${item.url}">${item.name}</a>
-            </td>
-            <td>
-                <button id="edit_page_${item.id}" class="edit_name" value="${item.id}">
-                  &#128394;<i class="bi bi-pen"></i>
-                </button>
-            </td>
-            <td class="chapters_total">
-                <span>${item.chapters_total}</span>
-            </td>
-            <td class="new">
-                <span>${item.new || ''}</span>
-            </td>
-            <td>
-                <button id="remove_page_${item.id}" class="remove_page" value="${item.id}">&#10005;</button>
-            </td>
-            `);
+      <td class="page_name">
+          <a id="link_page_${item.id}"  href="${item.url}">${item.name}</a>
+      </td>
+      <td>
+          <button id="edit_page_${item.id}" class="edit_name" value="${item.id}">
+            &#128394;
+          </button>
+      </td>
+      <td>
+          <span>${item.chapters_total}</span>
+      </td>
+      <td>
+          <span>${item_new}</span>
+      </td>
+      <td>
+          <button id="remove_page_${item.id}" class="remove_page" value="${item.id}">&#10005;</button>
+      </td>
+      `);
 
     }
   }

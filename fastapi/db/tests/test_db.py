@@ -35,3 +35,10 @@ class TestPostgresDBSession(unittest.TestCase):
         page = self.session.query(Page).filter_by(url=self.url).first()
         self.session.delete(page)
         self.session.commit()
+
+    def test_page_new(self):
+        page = self.session.query(Page).filter_by(url=self.url).first()
+        if not page:
+            self.test_create_page()
+        page = self.session.query(Page).filter_by(url=self.url).first()
+        assert page.new < page.new + 1

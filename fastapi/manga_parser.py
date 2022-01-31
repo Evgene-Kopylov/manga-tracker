@@ -1,4 +1,5 @@
 import threading
+import time
 from datetime import datetime
 from typing import List
 
@@ -104,6 +105,7 @@ class MangaParser:
             if ch and ch != ' ' and ch not in chapters_list:
                 chapters_list.append(ch)
                 self.page.last_update = datetime.now()
+                self.page.new += 1
 
         self.page.chapters = ", ".join(chapters_list)
         print(self.page.chapters)
@@ -119,22 +121,24 @@ class MangaParser:
 
 
 if __name__ == "__main__":
-    pages = session.query(Page).all()
+    for _ in range(100):
+        pages = session.query(Page).all()
 
-    def thread(pgs, browser):
-        for page in pgs:
-            try:
-                mp = MangaParser(page, browser)
-                mp.page_update()
-            except Exception as e:
-                print(e)
+        def thread(pgs, browser):
+            for page in pgs:
+                try:
+                    mp = MangaParser(page, browser)
+                    mp.page_update()
+                except Exception as e:
+                    print(e)
 
 
-    i = len(pages)
-    fox_pages = pages[:(i//2)]
-    fox_thread = threading.Thread(target=thread, args=(fox_pages, 'firefox',))
-    chrome_pages = pages[(i//2):]
-    chrome_thread = threading.Thread(target=thread, args=(chrome_pages, 'chrome',))
+        i = len(pages)
+        fox_pages = pages[:(i//2)]
+        fox_thread = threading.Thread(target=thread, args=(fox_pages, 'firefox',))
+        chrome_pages = pages[(i//2):]
+        chrome_thread = threading.Thread(target=thread, args=(chrome_pages, 'chrome',))
 
-    fox_thread.start()
-    chrome_thread.start()
+        fox_thread.start()
+        chrome_thread.start()
+        time.sleep(1500)
