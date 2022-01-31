@@ -16,6 +16,7 @@ class Page(Base):
     last_check = Column(DateTime, default=datetime.now())
     last_update = Column(DateTime, default=datetime.now())
     chapters = Column(String(50000), default='')
+    new = Column(Integer, default=0)
 
     def chapters_list(self) -> List:
         """
