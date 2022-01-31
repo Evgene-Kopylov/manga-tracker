@@ -1,82 +1,100 @@
 var ws = new WebSocket(`ws://localhost:8000/ws/list_all`);
-ws.onmessage = function(event) {
-    var collection = eval(event.data)
+ws.onmessage = function (event) {
+  var collection = eval(event.data)
 
-    for (var i in eval(event.data)) {
-        var item = collection[i]
-        
-        if ($('#page_' + item.id).length) {
-            console.log('item already present')
-        } else {
-            $("<tr>", {
-                id: 'page_' + item.id
-            }).prependTo("#user_list")
+  for (var i in eval(event.data)) {
+    var item = collection[i]
 
-            $("<td>", {
-                text: item.name
-            }).appendTo("#page_" + item.id)
+    if ($('#page_' + item.id).length) {
+      console.log('item already present')
+    } else {
+      $("<tr>", {
+        id: 'page_' + item.id
+      }).prependTo("#user_list");
 
-            $("<td>", {
-                id: "edit_name_page_" + item.id,
-            }).appendTo("#page_" + item.id)
+      $('#page_' + item.id).html(`
+            <td>
+                <a id="link_page_${item.id}" href="${item.url}">${item.name}</a>
+            </td>
+            <td>
+                <button id="edit_page_${item.id}" class="edit_name" value="${item.id}">/</button>
+            </td>
+            <td>
+                <span>${item.chapters_total}</span>
+            </td>
+            <td>
+                <span>${item.new || ''}</span>
+            </td>
+            <td>
+                <button id="remove_page_${item.id}" class="remove_page" value="${item.id}">X</button>
+            </td>
+            `);
 
-                $("<button>", {
-                    id: '#edit_page',
-                    class: 'edit_name',
-                    value: item.id,
-                    text: '/'
-                }).appendTo("#edit_name_page_" + item.id)
-
-            $("<td>", {
-                text: item.chapters_total
-            }).appendTo("#page_" + item.id)
-
-            $("<td>", {
-                text: item.new || '(+new)'
-            }).appendTo("#page_" + item.id)
-            
-            $("<td>", {
-                id: "td_remove_page_" + item.id,
-            }).appendTo("#page_" + item.id)
-
-                $("<button>", {
-                    id: "remove_page_" + item.id,
-                    class: 'remove_page',
-                    value: item.id,
-                    text: 'X'
-                }).appendTo("td#td_remove_page_" + item.id)
-        }
     }
-};
-function sendMessage(event) {
-    ws.send(JSON.stringify({msg: event}))
-    event.preventDefault()
+  }
 };
 
-window.addEventListener('focus', sendMessage);
-
-$(document).on("click",".edit_name", function () {
-    var clickedBtnID = this.id
-    console.log('you clicked on button #' + clickedBtnID)
-    ws.send(JSON.stringify({id: this.id, value: this.value}));
+window.addEventListener('focus', function() {
+  ws.send(JSON.stringify({ event: 'focus' }))
 });
 
-$(document).on("click",".remove_page", function () {
-    var clickedBtnID = this.id
-    console.log('you clicked on button #' + clickedBtnID)
-    ws.send(JSON.stringify({id: this.id, value: this.value}));
+$(document).on("click", ".edit_name", function () {
+  let page_id = this.value
+
+  var link = $('#link_page_' + this.value)
+  let old_name = link.prop("innerText")
+
+  var input = $("<input>", {
+    id: 'name_field_page_' + this.value,
+    value: old_name,
+  })
+
+  link.replaceWith(input);
+  input.focus()
+
+  function editName() {
+    var new_name = input.prop("value")
+    if (old_name !== new_name) {
+      ws.send(JSON.stringify({
+        event: 'edit_name',
+        page_id: page_id,
+        value: new_name,
+    }));
+  }};
+
+  input.keypress(function (event) {
+    if (event.keyCode === 13) {
+      editName()
+      input.replaceWith(link);
+    }
+  });
+
+  input.blur(function () {
+    editName()
+    input.replaceWith(link);
+  });
+
+  input.blur(input.replaceWith.link)
 });
 
+$(document).on("click", ".remove_page", function () {
+  var clickedBtnID = this.id
+  console.log('you clicked on button #' + clickedBtnID)
+  ws.send(JSON.stringify({
+    event: 'remove_page',
+    page_id: this.value
+  }));
+});
 
 const refresh_interval = 30000
-setInterval(function() {
-    console.log('Interval reached every ' + 
-                refresh_interval + ' msec')
-    if (!document.hidden) {
-        console.log("not hidden")
-    } else {
-        console.log("hidden")
-    }
+setInterval(function () {
+  console.log('Interval reached every ' +
+    refresh_interval + ' msec')
+  if (!document.hidden) {
+    console.log("not hidden")
+  } else {
+    console.log("hidden")
+  }
 }, refresh_interval);
 
-ws.onopen = () => ws.send(JSON.stringify({msg: 'ws.onopen'}));
+ws.onopen = () => ws.send(JSON.stringify({ event: 'ws.onopen' }));
