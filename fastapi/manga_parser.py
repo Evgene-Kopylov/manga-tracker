@@ -1,4 +1,3 @@
-import threading
 import time
 from datetime import datetime
 from typing import List
@@ -123,22 +122,10 @@ class MangaParser:
 if __name__ == "__main__":
     for _ in range(100):
         pages = session.query(Page).all()
-
-        def thread(pgs, browser):
-            for page in pgs:
-                try:
-                    mp = MangaParser(page, browser)
-                    mp.page_update()
-                except Exception as e:
-                    print(e)
-
-
-        i = len(pages)
-        fox_pages = pages[:(i//2)]
-        fox_thread = threading.Thread(target=thread, args=(fox_pages, 'firefox',))
-        chrome_pages = pages[(i//2):]
-        chrome_thread = threading.Thread(target=thread, args=(chrome_pages, 'chrome',))
-
-        fox_thread.start()
-        chrome_thread.start()
+        for page in pages:
+            try:
+                mp = MangaParser(page, 0)
+                mp.page_update()
+            except Exception as e:
+                print(e)
         time.sleep(1500)
