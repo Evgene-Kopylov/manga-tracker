@@ -1,14 +1,25 @@
+import os
 from typing import Dict, Any
 
+from dotenv import load_dotenv, find_dotenv
 from fastapi import APIRouter, Request
 
 from db.models import Page
 from db.schemas.page import AddPageSchema
 from db.session import SessionLocal
 from routers.page_utils import get_name
+from routers.tests.rmq_pablish import Publisher
 
 session = SessionLocal()
 router = APIRouter()
+
+load_dotenv(find_dotenv())
+url = os.environ.get('AMQP_URL', "amqp://guest:guest@localhost:5672/")
+rmq_config = {
+    'url': url,
+    'exchange': 'manga_tracker'
+}
+publisher = Publisher(rmq_config)
 
 
 @router.post('/page')
@@ -41,6 +52,8 @@ def add_page(url: str, element: str, block: str
         page.name = get_name(url)
         session.add(page)
         session.commit()
+        publisher.publish('new_page', str(page.id))
+
     return {
         'id': page.id,
         'url': url[:100] or url,

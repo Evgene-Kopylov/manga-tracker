@@ -9,6 +9,12 @@ services:
     ports:
       - 5432:5432
 
+  rabbitmq:
+    # https://hub.docker.com/_/rabbitmq/
+    image: 'rabbitmq:3.6-management-alpine'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
 
   chrome:
     image: selenium/node-chrome:4.1.1-20220121
