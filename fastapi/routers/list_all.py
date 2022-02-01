@@ -41,17 +41,27 @@ async def get(request: Request):
 
 
 def event_action(ws_msg: MutableMapping[str, Any]) -> None:
+    """
+
+    @param ws_msg: websocket msg
+    """
     if not ws_msg.get('text'):
         return
     msg = json.loads(ws_msg.get('text'))
-    print(msg)
+    print(f"{msg=}")
+    if msg.get('event') == 'ws.onopen':
+        return
+    _id = msg.get('page_id')
+    if not _id:
+        return
+    _id = int(msg.get('page_id'))
+    page = session.query(Page).filter_by(id=_id).first()
     match msg.get('event'):
         case 'remove_page':
-            print(f"{msg=}")
-            _id = int(msg.get('page_id'))
-            page = session.query(Page).filter_by(id=_id).first()
             session.delete(page)
-            session.commit()
+        case 'edit_name':
+            page.name = msg.get('value')
+    session.commit()
 
 
 @router.websocket("/ws/list_all")

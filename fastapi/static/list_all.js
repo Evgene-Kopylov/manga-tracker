@@ -69,6 +69,7 @@ $(document).on("click", ".edit_name", function () {
         page_id: page_id,
         value: new_name,
     }));
+    link.text(new_name);
   }};
 
   input.keypress(function (event) {
