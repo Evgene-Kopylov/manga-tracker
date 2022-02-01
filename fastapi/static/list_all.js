@@ -5,15 +5,24 @@ ws.onmessage = function (event) {
   for (var i in eval(event.data)) {
     var item = collection[i]
 
-    if ($('#page_' + item.id).length) {
-      console.log('item already present')
-    } else {
+    if ($('#page_' + item.id).length) {  // item already present
+      var new_0 = $("#new_" + item.id).text()
+      var new_1 = ''
+      if (item.new) {
+        new_1 = `(+${item.new})`
+      } 
+      if (new_0 == new_1) {
+        console.log('==')
+      } else {
+        $("#new_" + item.id).text(new_1)
+      }
+    } else {  // new item
       $("<tr>", {
         id: 'page_' + item.id
       }).prependTo("#user_list");
 
       let item_new = ''
-      if (item.new && item.new) {
+      if (item.new) {
         item_new = `(+${item.new})`
       }
 
@@ -30,7 +39,7 @@ ws.onmessage = function (event) {
           <span>${item.chapters_total}</span>
       </td>
       <td>
-          <span>${item_new}</span>
+          <span id="new_${item.id}">${item_new}</span>
       </td>
       <td>
           <button id="remove_page_${item.id}" class="remove_page" value="${item.id}">&#10005;</button>
@@ -52,7 +61,7 @@ $(document).on("click", ".edit_name", function () {
   let old_name = link.prop("innerText")
 
   var input = $("<input>", {
-    id: 'name_field_page_' + this.value,
+    id: 'name_field_' + this.value,
     class: 'name_field',
     size: 50,
     value: old_name,

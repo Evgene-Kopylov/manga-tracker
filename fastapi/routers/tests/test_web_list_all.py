@@ -1,3 +1,4 @@
+from datetime import datetime
 import re
 import time
 import unittest
@@ -25,6 +26,7 @@ class TestWebListAll(unittest.TestCase):
         chrome_options = webdriver.ChromeOptions()
         if os.environ.get("LOCAL_DEV"):
             self.url = 'http://127.0.0.1:8000/'
+            self.url_add_page = 'http://127.0.0.1:8000/add_page/?url=url&element=element&block=block'
             self.driver = webdriver.Chrome(
                 service=Service(ChromeDriverManager().install())
             )
@@ -39,18 +41,45 @@ class TestWebListAll(unittest.TestCase):
         self.driver.quit()
 
     def test_page_delete(self):
-        self.driver.get('http://127.0.0.1:8000/add_page/?url=url&element=element&block=block')
+        self.driver.get(self.url_add_page)
         id = re.search(r"\"id\":\d+", self.driver.page_source).group(0)
         id = re.search(r"\d+", id).group(0)
         page = session.query(Page).filter_by(id=id).first()
         assert page
         self.driver.get(self.url)
         print(id)
-        time.sleep(0.5)
+        time.sleep(0.6)
         delete_btn_id = "remove_page_" + id
         delete_btn = self.driver.find_element(By.ID, delete_btn_id)
         print(delete_btn_id)
         delete_btn.click()
-        time.sleep(0.5)
+        time.sleep(0.3)
         page = session.query(Page).filter_by(id=id).first()
         assert not page
+
+    def test_edit_page_name(self):
+        self.driver.get(self.url_add_page)
+        id = re.search(r"\"id\":\d+", self.driver.page_source).group(0)
+        id = re.search(r"\d+", id).group(0)
+        time.sleep(0.1)
+        self.driver.get(self.url)
+        time.sleep(0.6)
+        safe_click = self.driver.find_element(By.ID, 'safe_click')
+        edit_page_id = 'edit_page_' + id
+        edit_btn = self.driver.find_element(By.ID, edit_page_id)
+        edit_btn.click()
+        name_field_id = 'name_field_' + id
+        name_field = self.driver.find_element(By.ID, name_field_id)
+        name_field.clear()
+        safe_click.click()
+        time.sleep(0.1)
+        new_name = ''.join([x for x in str(datetime.now()) if x.isdigit()])
+        edit_btn.click()
+        name_field = self.driver.find_element(By.ID, name_field_id)
+        name_field.send_keys(new_name)
+        time.sleep(0.1)
+        safe_click.click()
+        time.sleep(0.2)
+        page = session.query(Page).filter_by(id=id).first()
+        assert page.name == new_name
+
