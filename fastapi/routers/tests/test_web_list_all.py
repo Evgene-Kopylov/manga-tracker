@@ -8,6 +8,7 @@ import os
 from dotenv import find_dotenv, load_dotenv
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 
 from db.models import Page
 from db.session import SessionLocal
@@ -24,7 +25,9 @@ class TestWebListAll(unittest.TestCase):
         chrome_options = webdriver.ChromeOptions()
         if os.environ.get("LOCAL_DEV"):
             self.url = 'http://127.0.0.1:8000/'
-            self.driver = webdriver.Chrome(ChromeDriverManager().install())
+            self.driver = webdriver.Chrome(
+                service=Service(ChromeDriverManager().install())
+            )
         else:
             self.driver = webdriver.Remote(
                 command_executor='http://localhost:4444',
@@ -35,14 +38,10 @@ class TestWebListAll(unittest.TestCase):
     def tearDown(self) -> None:
         self.driver.quit()
 
-    def test_(self):
-        self.driver.get(self.url)
-        assert self.driver.title
-
     def test_page_delete(self):
         self.driver.get('http://127.0.0.1:8000/add_page/?url=url&element=element&block=block')
-        id = re.search("\"id\":\d+", self.driver.page_source).group(0)
-        id = re.search("\d+", id).group(0)
+        id = re.search(r"\"id\":\d+", self.driver.page_source).group(0)
+        id = re.search(r"\d+", id).group(0)
         page = session.query(Page).filter_by(id=id).first()
         assert page
         self.driver.get(self.url)
