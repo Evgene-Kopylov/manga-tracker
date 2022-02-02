@@ -38,7 +38,7 @@ ws.onmessage = function (event) {
       <td>
           <span>${item.chapters_total}</span>
       </td>
-      <td>
+      <td class="new" value="${item.id}">
           <span id="new_${item.id}">${item_new}</span>
       </td>
       <td>
@@ -115,6 +115,14 @@ $(document).on("click", ".page_url", function () {
   }));
   window.location.replace($(this).attr('href'));
 
+});
+
+$(document).on("click", ".new", function () {
+  console.log('you clicked on new #' + this.id)
+  ws.send(JSON.stringify({
+    event: 'click_new',
+    page_id: $(this).attr('value')
+  }));
 });
 
 const refresh_interval = 30000

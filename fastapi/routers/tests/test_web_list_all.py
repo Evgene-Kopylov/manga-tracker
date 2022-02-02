@@ -35,7 +35,7 @@ class TestWebListAll(unittest.TestCase):
                 command_executor='http://localhost:4444',
                 options=chrome_options
             )
-            self.url = 'insert public addres'  #
+            self.url = ''  # ipublic addres
 
     def tearDown(self) -> None:
         self.driver.quit()
@@ -83,3 +83,27 @@ class TestWebListAll(unittest.TestCase):
         page = session.query(Page).filter_by(id=id).first()
         assert page.name == new_name
 
+    def test_page_new(self):
+        self.driver.get(self.url_add_page)
+        _id = re.search(r"\"id\":\d+", self.driver.page_source).group(0)
+        page_id = re.search(r"\d+", _id).group(0)
+        time.sleep(0.1)
+
+        page = session.query(Page).filter_by(id=page_id).first()
+        page.chapters = '1, 2, 3, 4, 5'
+        page.new = 2
+        session.commit()
+        self.driver.get(self.url)
+        time.sleep(0.6)
+        new_id = 'new_' + page_id
+        new_el = self.driver.find_element(By.ID, new_id)
+        print(new_el.text)
+        new_num = new_el.text[2:-1]
+        print(new_num)
+
+        page.new = 3
+        session.commit()
+        new_el.click()
+        time.sleep(0.5)
+        new_el = self.driver.find_element(By.ID, new_id)
+        assert new_el.text == '(+3)'
