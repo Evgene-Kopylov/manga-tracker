@@ -120,12 +120,11 @@ class MangaParser:
 
 
 if __name__ == "__main__":
-    for _ in range(100):
-        pages = session.query(Page).all()
-        for page in pages:
-            try:
-                mp = MangaParser(page, 0)
-                mp.page_update()
-            except Exception as e:
-                print(e)
-        time.sleep(1500)
+    pages = session.query(Page).all()
+    for page in pages:
+        try:
+            mp = MangaParser(page, 0)
+            mp.page_update()
+        except Exception as e:
+            print(e)
+    time.sleep(1500)

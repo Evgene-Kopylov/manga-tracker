@@ -27,8 +27,8 @@
 
 Контейнеры:
 - `manga_tracker` - FastApi based web app 
-- `insta_parser` - Контейнер для быстрой обработки запроса на парсинг
-- `loop_parser` - Котейнер для парсинга по расписанию
+- `instant_parser` - Контейнер для быстрой обработки запроса на парсинг
+- `manga_parser` - Котейнер для парсинга по расписанию
 - `db` - postgres
 - `rabbitmq` - обмен сообщений внутри сервиса
 - `selenium-hub` - selenium docker
