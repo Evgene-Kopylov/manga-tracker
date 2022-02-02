@@ -2,7 +2,8 @@ import unittest
 
 from fastapi.testclient import TestClient
 from db.session import SessionLocal
-from main import app, get_pages
+from main import app
+from routers.list_all_utils import get_pages
 
 session = SessionLocal()
 
@@ -30,5 +31,4 @@ class TestAny(unittest.TestCase):
         print(response.content.decode('utf-8'))
 
     def test_get_pages(self):
-        print(get_pages())
-
+        assert get_pages()
