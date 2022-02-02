@@ -37,7 +37,7 @@ class Page(Base):
 
     @block.setter
     def block(self, selector):
-        self.name = selector_fix(selector)
+        self._block = selector_fix(selector)
 
     @property
     def chapters(self) -> List:

@@ -9,7 +9,7 @@ from pika.spec import Basic, BasicProperties
 load_dotenv(find_dotenv())
 
 
-class MangaParser:
+class InstaMangaParser:
     """
     parsing target page on request from RabbitMQ network
 
@@ -118,5 +118,5 @@ class MangaParser:
 
 
 if __name__ == "__main__":
-    mpar = MangaParser()
+    mpar = InstaMangaParser()
     mpar.start()

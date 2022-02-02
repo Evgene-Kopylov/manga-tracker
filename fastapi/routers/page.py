@@ -52,8 +52,6 @@ def add_page(url: str, element: str, block: str
         _element=page.element,
         _block=page.block
     ).first()
-    print(f"{page.url}")
-    print(f"{duble=}")
     if not duble:
         session.add(page)
         session.commit()

@@ -48,9 +48,7 @@ class MangaParser:
         for page in _pages:
             soup = self._page_soup(page.url)
             block = self._page_block(soup, page)
-            file = open('block.html', 'w')
-            file.write(block.prettify())
-            file.close()
+            # page.block_html =
             print(block)
 
     def stop(self):
