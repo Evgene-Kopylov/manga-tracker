@@ -27,7 +27,7 @@
 
 Контейнеры:
 - `manga_tracker` - FastApi based web app 
-- `instant_parser` - Контейнер для быстрой обработки запроса на парсинг
+- `instant_parser` - Контейнер для быстрой обработки запроса на парсинг по запросу через RabbitMQ
 - `manga_parser` - Котейнер для парсинга по расписанию
 - `db` - postgres
 - `rabbitmq` - обмен сообщений внутри сервиса
