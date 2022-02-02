@@ -48,8 +48,8 @@ class MangaParser:
         for page in _pages:
             soup = self._page_soup(page.url)
             block = self._page_block(soup, page)
-            # page.block_html =
-            print(block)
+            page.block_html = block.prettify()
+            session.commit()
 
     def stop(self):
         self.driver.quit()
@@ -68,7 +68,7 @@ class MangaParser:
     def _page_block(self, soup: BeautifulSoup, page: Page) -> BeautifulSoup:
         if page.element == page.block:
             return soup
-        print(page.id)
+        print(f"{page.id=}")
         block = soup.select_one(page.block)
         return block
 
