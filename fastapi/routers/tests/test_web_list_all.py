@@ -107,3 +107,6 @@ class TestWebListAll(unittest.TestCase):
         time.sleep(0.5)
         new_el = self.driver.find_element(By.ID, new_id)
         assert new_el.text == '(+3)'
+
+        session.delete(page)
+        session.commit()

@@ -118,7 +118,7 @@ $(document).on("click", ".page_url", function () {
 });
 
 $(document).on("click", ".new", function () {
-  console.log('you clicked on new #' + this.id)
+  console.log('clicked on new for page ' + $(this).attr('value'))
   ws.send(JSON.stringify({
     event: 'click_new',
     page_id: $(this).attr('value')
