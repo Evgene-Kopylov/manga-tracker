@@ -42,3 +42,8 @@ class TestPostgresDBSession(unittest.TestCase):
             self.test_create_page()
         page = self.session.query(Page).filter_by(url=self.url).first()
         assert page.new < page.new + 1
+
+    def test_element_setter(self):
+        page = Page()
+        page.element = 'div.......single-page > div..cols'
+        assert page.element and '..' not in page.element

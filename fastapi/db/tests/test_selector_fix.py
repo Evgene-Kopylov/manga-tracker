@@ -1,5 +1,4 @@
-from routers.utils.page_static import cut_selector
-
+from db.models import selector_fix
 
 def test_cut_selector():
     selector = "html > body.wp-manga-template-default.single.single-wp-manga.postid-3334.wp-embed-responsive.wp-manga" \
@@ -13,5 +12,5 @@ def test_cut_selector():
                "div.page-content-listing.single-page > div.listing-chapters_wrap.cols-3 > " \
                "ul.main.version-chap.no-volumn "
     assert '..' in selector
-    selector = cut_selector(selector)
+    selector = selector_fix(selector)
     assert '..' not in selector
