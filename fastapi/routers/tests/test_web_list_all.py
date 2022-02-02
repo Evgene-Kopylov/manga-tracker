@@ -27,9 +27,8 @@ class TestWebListAll(unittest.TestCase):
         if os.environ.get("LOCAL_DEV"):
             self.url = 'http://127.0.0.1:8000/'
             self.url_add_page = 'http://127.0.0.1:8000/add_page/?url=url&element=element&block=block'
-            self.driver = webdriver.Chrome(
-                service=Service(ChromeDriverManager().install())
-            )
+            s = Service(ChromeDriverManager().install())
+            self.driver = webdriver.Chrome(service=s)
         else:
             self.driver = webdriver.Remote(
                 command_executor='http://localhost:4444',
