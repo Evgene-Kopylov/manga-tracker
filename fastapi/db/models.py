@@ -16,6 +16,12 @@ class Page(Base):
     url = Column(String, nullable=False)
     name = Column(String(200), nullable=False, default='no name provided')
     _element = Column(String)
+    _block = Column(String)
+    block_html = Column(TEXT)
+    last_check = Column(DateTime, default=datetime.now())
+    last_update = Column(DateTime, default=datetime.now())
+    _chapters = Column(String(50000), default='')
+    new = Column(Integer, default=0)
 
     @property
     def element(self):
@@ -25,8 +31,6 @@ class Page(Base):
     def element(self, selector):
         self._element = selector_fix(selector)
 
-    _block = Column(String)
-
     @property
     def block(self):
         return self._block
@@ -35,22 +39,17 @@ class Page(Base):
     def block(self, selector):
         self.name = selector_fix(selector)
 
-    block_html = Column(TEXT)
-    last_check = Column(DateTime, default=datetime.now())
-    last_update = Column(DateTime, default=datetime.now())
-    chapters = Column(String(50000), default='')
-    new = Column(Integer, default=0)
+    @property
+    def chapters(self) -> List:
+        if self._chapters:
+            return [x for x in self._chapters.split(', ') if x]
+        else:
+            return []
 
-    def chapters_list(self) -> List:
-        """
+    @chapters.setter
+    def chapters(self, chapters: List):
+        self._chapters = ', '.join(chapters)
 
-        :return: List of chapters
-        """
-        return [x for x in self.chapters.split(', ') if x]
-
-    def chapters_total(self) -> int:
-        """
-
-        :return: number of detected chapters
-        """
-        return len(self.chapters_list())
+    @property
+    def total(self):
+        return len(self.chapters)

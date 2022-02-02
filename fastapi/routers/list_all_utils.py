@@ -13,8 +13,8 @@ def get_pages() -> List:
             'id': page.id,
             'url': page.url,
             'name': page.name,
-            'last_chapters': page.chapters_list()[:5],
-            'chapters_total': page.chapters_total(),
+            'last_chapters': page.chapters[:5],
+            'total': page.total,
             'last_check': str(page.last_check),
             'last_update': str(page.last_update),
             'new': page.new

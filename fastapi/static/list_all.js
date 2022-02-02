@@ -36,7 +36,7 @@ ws.onmessage = function (event) {
           </button>
       </td>
       <td>
-          <span>${item.chapters_total}</span>
+          <span>${item.total}</span>
       </td>
       <td class="new" value="${item.id}">
           <span id="new_${item.id}">${item_new}</span>

@@ -42,6 +42,7 @@ class TestWebListAll(unittest.TestCase):
 
     def test_page_delete(self):
         self.driver.get(self.url_add_page)
+        time.sleep(0.2)
         id = re.search(r"\"id\":\d+", self.driver.page_source).group(0)
         id = re.search(r"\d+", id).group(0)
         page = session.query(Page).filter_by(id=id).first()
@@ -59,9 +60,9 @@ class TestWebListAll(unittest.TestCase):
 
     def test_edit_page_name(self):
         self.driver.get(self.url_add_page)
+        time.sleep(0.2)
         id = re.search(r"\"id\":\d+", self.driver.page_source).group(0)
         id = re.search(r"\d+", id).group(0)
-        time.sleep(0.1)
         self.driver.get(self.url)
         time.sleep(0.6)
         safe_click = self.driver.find_element(By.ID, 'safe_click')

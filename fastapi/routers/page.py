@@ -42,26 +42,32 @@ def user_registration(request: Request, page: AddPageSchema
 @router.get('/add_page')
 def add_page(url: str, element: str, block: str
              ) -> Dict[str, Any]:
-    page = session.query(Page).filter_by(url=url, element=element, block=block).first()
-    if page:
-        print('page duplicate')
-    else:
-        page = Page()
-        page.url = url
-        page.element = element
-        page.block = block
-        page.name = get_name(url)
+    page = Page()
+    page.url = url
+    page.element = element
+    page.block = block
+    page.name = get_name(url)
+    duble = session.query(Page).filter_by(
+        url=page.url,
+        _element=page.element,
+        _block=page.block
+    ).first()
+    print(f"{page.url}")
+    print(f"{duble=}")
+    if not duble:
         session.add(page)
         session.commit()
         publisher.publish('new_page', str(page.id))
+    else:
+        print('page duplicate')
 
     return {
-        'id': page.id,
+        'id': page.id or duble.id,
         'url': url[:100] or url,
         'name': page.name,
         'element': ('... ' + element[-50:]) or element,
         'block': ('... ' + block[-50:]) or block,
-        'chapters': page.chapters_list(),
-        'total': page.chapters_total(),
+        'chapters': page.chapters,
+        'total': page.total,
         'new': page.new
     }
