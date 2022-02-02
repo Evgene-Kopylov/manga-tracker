@@ -22,8 +22,6 @@ def upgrade():
         sa.Column('url', sa.String(), nullable=False),
         sa.Column('element', sa.String()),
         sa.Column('block', sa.String()),
-        sa.Column('data', sa.String()),
-        sa.Column('content', sa.String()),
         sa.Column('last_check', sa.Date),
     )
 

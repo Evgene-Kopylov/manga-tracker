@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List
 
 from db.base import Base
-from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy import Column, DateTime, Integer, String, TEXT
 
 
 class Page(Base):
@@ -11,8 +11,7 @@ class Page(Base):
     name = Column(String(200), nullable=False, default='no name provided')
     element = Column(String)
     block = Column(String)
-    data = Column(String)
-    content = Column(String)
+    block_html = Column(TEXT)
     last_check = Column(DateTime, default=datetime.now())
     last_update = Column(DateTime, default=datetime.now())
     chapters = Column(String(50000), default='')
