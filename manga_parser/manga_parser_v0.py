@@ -1,4 +1,3 @@
-import time
 from datetime import datetime
 from typing import List
 
@@ -125,6 +124,8 @@ if __name__ == "__main__":
         try:
             mp = MangaParser(page, 0)
             mp.page_update()
+
         except Exception as e:
             print(e)
-    time.sleep(1500)
+        break
+    # time.sleep(1500)
