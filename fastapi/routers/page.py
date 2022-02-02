@@ -9,6 +9,7 @@ from db.schemas.page import AddPageSchema
 from db.session import SessionLocal
 from routers.page_utils import get_name
 from routers.tests.rmq_pablish import Publisher
+from routers.utils.page_static import cut_selector
 
 session = SessionLocal()
 router = APIRouter()
@@ -47,8 +48,8 @@ def add_page(url: str, element: str, block: str
     else:
         page = Page()
         page.url = url
-        page.element = element
-        page.block = block
+        page.element = cut_selector(element)
+        page.block = cut_selector(block)
         page.name = get_name(url)
         session.add(page)
         session.commit()
