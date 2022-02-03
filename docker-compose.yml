@@ -7,7 +7,7 @@ services:
     env_file:
       - ./.env
     ports:
-      - 5432:5432
+      - "5432:5432"
 
   rabbitmq:
     # https://hub.docker.com/_/rabbitmq/
@@ -46,3 +46,15 @@ services:
       - "4442:4442"
       - "4443:4443"
       - "4444:4444"
+
+
+  web_app:
+
+    build: ./web_app
+    env_file:
+      - .env
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
