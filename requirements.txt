@@ -16,3 +16,4 @@ pika~=1.2.0
 psycopg2~=2.9.3
 jinja2~=3.0.3
 webdriver-manager~=3.5.2
+discord-webhook~=0.14.0
