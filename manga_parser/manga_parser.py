@@ -1,17 +1,15 @@
 from __future__ import annotations
+
 from typing import List
 
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv, find_dotenv
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 from db.models import Page
-from selenium import webdriver
 from db.session import SessionLocal
-from bs4 import BeautifulSoup
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-
-
-session = SessionLocal()
 
 load_dotenv(find_dotenv())
 
@@ -60,25 +58,29 @@ class MangaParser:
         _pages = [pages] if type(pages) is not list else pages
         driver = self._driver()
         session = SessionLocal()
-        for page in _pages:
-            page = session.query(Page).filter_by(id=page.id).first()
-            print(f"{page.name=}")
-            soup = self._page_soup(page.url, driver)
-            block = self._page_block(soup, page)
-            if not block:
-                print('no block')
-                break
-            page.block_html = block.prettify() if block else ''
-            session.commit()
+        for _page in _pages:
+            try:
+                page = session.query(Page).filter_by(id=_page.id).first()
+                print(f"{page.name=}")
+                soup = self._page_soup(page.url, driver)
+                block = self._page_block(soup, page)
+                if not block:
+                    print('no block')
+                    break
+                page.block_html = block.prettify() if block else ''
+                session.commit()
 
-            chapters = [ch.text for ch in block.select(page.element)]
-            page.add_chapters(chapters)
-            session.commit()
-            print(chapters)
+                chapters = [ch.text for ch in block.select(page.element)]
+                page.add_chapters(chapters)
+                session.commit()
+                print(chapters)
+            except AttributeError as e:
+                print(e)
 
         driver.quit()
 
-    def _page_soup(self, url: str, driver) -> BeautifulSoup:
+    @staticmethod
+    def _page_soup(url: str, driver) -> BeautifulSoup:
         """
 
         :param url: page url
@@ -88,7 +90,8 @@ class MangaParser:
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         return soup
 
-    def _page_block(self, soup: BeautifulSoup, page: Page) -> BeautifulSoup:
+    @staticmethod
+    def _page_block(soup: BeautifulSoup, page: Page) -> BeautifulSoup:
         if not page.block or page.element == page.block:
             return soup
         block = soup.select_one(page.block)
@@ -96,8 +99,8 @@ class MangaParser:
 
 
 if __name__ == "__main__":
-    session = SessionLocal()
+    local_session = SessionLocal()
     process = MangaParser(browser=1, local=False)
-    pages = session.query(Page).all()
+    pgs = local_session.query(Page).all()
     # process.start(pages)
-    process.start(pages[0])
+    process.start(pgs[0])

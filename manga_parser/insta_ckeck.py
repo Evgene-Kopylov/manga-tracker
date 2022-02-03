@@ -1,5 +1,6 @@
 import os
 from typing import Any
+
 import pika
 from discord_webhook import DiscordWebhook, DiscordEmbed
 from dotenv import find_dotenv, load_dotenv
@@ -112,7 +113,7 @@ class InstaMangaParser:
         page = session.query(Page).filter_by(id=int(msg)).first()
         parser.start(page)
 
-        comment = f'{page.id=} {page.name=}'
+        comment = f'{page.id=} {page.name=}' if page else f'{page=}'
         self.log(comment=comment, important=True)
         return
 
@@ -121,8 +122,8 @@ class InstaMangaParser:
         """
         Checks if message is valid
 
-        :param msg: сообщение подлежащее проверке
-        :return: 'OK' if valid
+        @param msg: message to check
+        @return: 'OK' if valid
         """
         if msg.isdigit():
             return 'OK'
