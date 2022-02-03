@@ -1,9 +1,9 @@
-import os
-# from datetime import datetime
+from __future__ import annotations
 from typing import List
 
-# import requests
 from dotenv import load_dotenv, find_dotenv
+from selenium.webdriver.remote.webdriver import WebDriver
+
 from db.models import Page
 from selenium import webdriver
 from db.session import SessionLocal
@@ -65,10 +65,18 @@ class MangaParser:
         _pages = [pages] if type(pages) is not list else pages
         driver = self._driver()
         for page in _pages:
-            soup = self._page_soup(page.url, driver)
-            block = self._page_block(soup, page)
-            page.block_html = block.prettify()
+            block = self._page_block(page, driver)
+            if not block:
+                print('no block')
+                break
+            print(f"{block.text[:50]=}")
+            page.block_html = block.prettify() if block else ''
             session.commit()
+
+            chapters = [ch.text for ch in block.select(page.element)]
+            page.add_chapters(chapters)
+            session.commit()
+            print(chapters)
 
         driver.quit()
 
@@ -80,9 +88,12 @@ class MangaParser:
         """
         driver.get(url)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
+        print(f"_page_soup {soup.text[:50]=}")
         return soup
 
-    def _page_block(self, soup: BeautifulSoup, page: Page) -> BeautifulSoup:
+    def _page_block(self, page: Page, driver: WebDriver) -> BeautifulSoup:
+        print(f"{type(driver)=}")
+        soup = self._page_soup(page.url, driver)
         if page.element == page.block:
             return soup
         print(f"{page.id=}")
@@ -93,5 +104,5 @@ class MangaParser:
 if __name__ == "__main__":
     process = MangaParser(browser=1, local=True)
     pages = session.query(Page).all()
-    # process.start(pages)
-    process.start(pages[0])
+    process.start(pages)
+    # process.start(pages[0])

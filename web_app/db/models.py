@@ -50,6 +50,12 @@ class Page(Base):
     def chapters(self, chapters: List):
         self._chapters = ', '.join(chapters)
 
+    def add_chapters(self, chapters: List):
+        """add new unique chapters"""
+        n = self.total
+        self.chapters += [c for c in chapters if c not in self.chapters]
+        self.new += self.total - n
+
     @property
     def total(self):
         return len(self.chapters)
