@@ -4,7 +4,7 @@ from dotenv import find_dotenv, load_dotenv
 
 load_dotenv(find_dotenv())
 
-db_url = "postgresql://{}:{}@{}:{}/{}".format(
+db_url = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
     os.environ.get("POSTGRES_USER"),
     os.environ.get("POSTGRES_PASSWORD"),
     os.environ.get("POSTGRES_SERVER"),
