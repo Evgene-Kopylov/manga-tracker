@@ -26,7 +26,7 @@ class Publisher:
 
 load_dotenv(find_dotenv())
 
-url = os.environ.get('AMQP_URL', "amqp://guest:guest@rabbitmq:5672/")
+url = os.environ.get('AMQP_URL', "amqp://guest:guest@localhost:5672/")
 
 config = {
     'url': url,

@@ -7,7 +7,7 @@ load_dotenv(find_dotenv())
 db_url = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
     os.environ.get("POSTGRES_USER"),
     os.environ.get("POSTGRES_PASSWORD"),
-    os.environ.get("POSTGRES_SERVER"),
-    os.environ.get("POSTGRES_PORT"),
+    os.environ.get("POSTGRES_SERVER", 'localhost'),
+    os.environ.get("POSTGRES_PORT", '5432'),
     os.environ.get("POSTGRES_DB"),
 )

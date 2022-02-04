@@ -49,12 +49,16 @@ services:
 
 
   web_app:
-
     build: ./web_app
     env_file:
       - .env
     command: uvicorn main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
+    environment:
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=5432
+      - AMQP_URL=amqp://guest:guest@rabbitmq:5672/
     depends_on:
       - db
+      - rabbitmq
