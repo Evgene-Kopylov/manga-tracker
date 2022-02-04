@@ -9,9 +9,9 @@ session = SessionLocal()
 
 class TestMangaParser(unittest.TestCase):
     def setUp(self) -> None:
-        self.mp = MangaParser(local=True)
+        self.mp = MangaParser()
 
-    # @unittest.skip
+    @unittest.skip
     def test_driver(self):
         driver = self.mp._driver()
         driver.get('https://www.google.com/')

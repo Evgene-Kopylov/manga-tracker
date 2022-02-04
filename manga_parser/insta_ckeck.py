@@ -1,12 +1,20 @@
 import os
 from typing import Any
+
 import pika
 from discord_webhook import DiscordWebhook, DiscordEmbed
 from dotenv import find_dotenv, load_dotenv
 from pika.adapters.blocking_connection import BlockingChannel
 from pika.spec import Basic, BasicProperties
 
+from db.models import Page
+from db.session import SessionLocal
+from manga_parser import MangaParser
+
 load_dotenv(find_dotenv())
+
+session = SessionLocal()
+parser = MangaParser()
 
 
 class InstaMangaParser:
@@ -19,7 +27,7 @@ class InstaMangaParser:
 
     def __init__(self):
         self.exchange = 'manga_tracker'
-        self.discord_webhook_url = os.environ.get('DISCORD_WEBHOOK_URL')
+        self.discord_webhook_url = os.environ.get('DISCORD_WEBHOOK_URL', 'http://None')
         self.debug = True if os.getenv('DEBUG', '0') in ('1', 'true',
                                                          'yes') else False
         self.amqp_url = os.environ.get('AMQP_URL', 'amqp://guest:guest@localhost:5672/')
@@ -102,7 +110,10 @@ class InstaMangaParser:
             self.log(comment=comment, msg=msg)
             return
 
-        comment = 'Something goes wrong. Maybe.'
+        page = session.query(Page).filter_by(id=int(msg)).first()
+        parser.start(page)
+
+        comment = f'{page.id=} {page.name=}' if page else f'{page=}'
         self.log(comment=comment, important=True)
         return
 
@@ -111,10 +122,13 @@ class InstaMangaParser:
         """
         Checks if message is valid
 
-        :param msg: сообщение подлежащее проверке
-        :return: 'OK' if valid
+        @param msg: message to check
+        @return: 'OK' if valid
         """
-        return 'OK'
+        if msg.isdigit():
+            return 'OK'
+        else:
+            return 'not digit'
 
 
 if __name__ == "__main__":

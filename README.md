@@ -12,15 +12,16 @@
 
 ## Переменные окружения
 
-- `POSTGRES_DB`=manga_tracker_db
+- `PYTHONPATH` = `web_app`
+- `POSTGRES_DB` = `manga_tracker_db`
 - `POSTGRES_USER`
 - `POSTGRES_PASSWORD`
 - `SECRET_KEY`
-- `POSTGRES_SERVER`=localhost
+- `POSTGRES_SERVER`= localhost
 - `POSTGRES_PORT`=5432
 - `POSTGRES_TEST_PORT`=5444
 - `LOCAL_DEV` - set `1` if runs locally, ignore if not.
-- `AMQP_URL`=amqp://guest:guest@localhost:5672/
+- `AMQP_URL`= amqp://guest:guest@localhost:5672/
 - `DISCORD_WEBHOOK_URL` - discord server for debug logs
 
 ## Структура проекта
@@ -40,7 +41,7 @@ Alembic
 
 ## Тестирование
 ```commandline
-cd fastapi
+cd web_app
 pytest
 ```
 

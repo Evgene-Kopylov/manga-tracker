@@ -6,6 +6,11 @@ ws.onmessage = function (event) {
     var item = collection[i]
 
     if ($('#page_' + item.id).length) {  // item already present
+      var total = $("#total_" + item.id).text()
+      if (total !== item.total) {
+        $("#total_" + item.id).text(item.total)
+      };
+
       var new_0 = $("#new_" + item.id).text()
       var new_1 = ''
       if (item.new) {
@@ -36,7 +41,7 @@ ws.onmessage = function (event) {
           </button>
       </td>
       <td>
-          <span>${item.total}</span>
+          <span id="total_${item.id}">${item.total}</span>
       </td>
       <td class="new" value="${item.id}">
           <span id="new_${item.id}">${item_new}</span>
