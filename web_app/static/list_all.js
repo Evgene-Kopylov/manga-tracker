@@ -130,7 +130,7 @@ $(document).on("click", ".new", function () {
   }));
 });
 
-const refresh_interval = 30000
+const refresh_interval = 3000
 setInterval(function () {
   console.log('Interval reached every ' +
     refresh_interval + ' msec')

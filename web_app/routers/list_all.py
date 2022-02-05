@@ -3,11 +3,10 @@ from typing import List, MutableMapping, Any
 
 from fastapi import APIRouter, Request
 from fastapi import WebSocket, WebSocketDisconnect
+from fastapi.templating import Jinja2Templates
 
 from db.models import Page
 from db.session import SessionLocal
-from fastapi.templating import Jinja2Templates
-
 from routers.list_all_utils import get_pages
 
 session = SessionLocal()
@@ -72,7 +71,6 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             try:
                 ws_msg = await websocket.receive()
-                print(f"{ws_msg.get('text')=}")
                 event_action(ws_msg)
             except RuntimeError:
                 break

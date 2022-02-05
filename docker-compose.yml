@@ -38,7 +38,6 @@ services:
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
       - SE_NODE_SESSION_TIMEOUT=15
 
-
   selenium-hub:
     image: selenium/hub:4.1.1-20220121
     container_name: selenium-hub
@@ -46,7 +45,6 @@ services:
       - "4442:4442"
       - "4443:4443"
       - "4444:4444"
-
 
   web_app:
     build: ./web_app
@@ -59,6 +57,20 @@ services:
       - POSTGRES_SERVER=db
       - POSTGRES_PORT=5432
       - AMQP_URL=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - db
+      - rabbitmq
+
+  manga_parser:
+    build: ./manga_parser
+    env_file:
+      - .env
+    command: python insta_ckeck.py
+    environment:
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=5432
+      - AMQP_URL=amqp://guest:guest@rabbitmq:5672/
+      - SELENIUM_HOST=selenium-hub
     depends_on:
       - db
       - rabbitmq

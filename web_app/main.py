@@ -1,17 +1,15 @@
-from fastapi import FastAPI
 import uvicorn
+from fastapi import FastAPI
 from pydantic import BaseModel
-
-from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
 from db.session import SessionLocal
-from routers.page import router as page_router
 from routers.list_all import router as list_all_router
-
+from routers.page import router as page_router
 
 app = FastAPI()
 
+# from fastapi.middleware.cors import CORSMiddleware
 # app.add_middleware(
 #     CORSMiddleware,
 #     allow_origins=["*"],
