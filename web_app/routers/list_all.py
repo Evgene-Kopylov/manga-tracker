@@ -47,12 +47,12 @@ def event_action(ws_msg: MutableMapping[str, Any]) -> None:
     if not ws_msg.get('text'):
         return
     msg = json.loads(ws_msg.get('text'))
-    print(f"{msg=}")
     if msg.get('event') == 'ws.onopen':
         return
     _id = msg.get('page_id')
     if not _id:
         return
+    print(f"{msg=}")
     _id = int(msg.get('page_id'))
     page = session.query(Page).filter_by(id=_id).first()
     if msg.get('event') == 'remove_page':

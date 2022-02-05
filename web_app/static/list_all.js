@@ -16,9 +16,7 @@ ws.onmessage = function (event) {
       if (item.new) {
         new_1 = `(+${item.new})`
       } 
-      if (new_0 == new_1) {
-        console.log('==')
-      } else {
+      if (new_0 !== new_1) {
         $("#new_" + item.id).text(new_1)
       }
     } else {  // new item
@@ -103,7 +101,7 @@ $(document).on("click", ".edit_name", function () {
 
 $(document).on("click", ".remove_page", function () {
   var clickedBtnID = this.id
-  console.log('you clicked on button #' + clickedBtnID)
+  console.log('#' + clickedBtnID)
   ws.send(JSON.stringify({
     event: 'remove_page',
     page_id: this.value
@@ -112,7 +110,7 @@ $(document).on("click", ".remove_page", function () {
 });
 
 $(document).on("click", ".page_url", function () {
-  console.log('you clicked on button #' + this.id)
+  console.log('#' + this.id)
   console.log('href= ' + $(this).attr('href'))
   ws.send(JSON.stringify({
     event: 'page_url_click',
@@ -123,21 +121,20 @@ $(document).on("click", ".page_url", function () {
 });
 
 $(document).on("click", ".new", function () {
-  console.log('clicked on new for page ' + $(this).attr('value'))
+  console.log('new for page ' + $(this).attr('value'))
   ws.send(JSON.stringify({
     event: 'click_new',
     page_id: $(this).attr('value')
   }));
 });
 
-const refresh_interval = 3000
+const refresh_interval = 200
 setInterval(function () {
-  console.log('Interval reached every ' +
-    refresh_interval + ' msec')
-  if (!document.hidden) {
-    console.log("not hidden")
+  if (!document.hidden && ws.readyState) {
+    console.log('refresh_interval ' + refresh_interval + ' msec')
+    ws.send(JSON.stringify({ event: 'window.active' }))
   } else {
-    console.log("hidden")
+    console.log("document.hidden")
   }
 }, refresh_interval);
 
