@@ -33,7 +33,7 @@ const table = {
       <td id="edit_${item.id}" class="edit_name" value="${item.id}">&#128394;</td>
       <td id="total_${item.id}" class="total"><span></span></td>
       <td id="new_${item.id}" class="new" value="${item.id}"><span></span></td>
-      <td id="remove_${item.id}" class="remove" value="${item.id}">&#10005;</td>`
+      <td id="remove_${item.id}" class="remove_page" value="${item.id}">&#10005;</td>`
     }).prependTo("#user_list");
   },
 
@@ -46,6 +46,8 @@ const table = {
   },
 
   setNew: function(item) {
+    // var url = document.location.origin + "/static/Spinner-2.4s-207px.gif"
+    // $(`<img src=${url}>`).appendTo($("#new_"+item.id));
     $(`#new_${item.id} > span`).text(item.new)
   }
 };
@@ -101,13 +103,13 @@ $(document).on("click", ".edit_name", function () {
 });
 
 $(document).on("click", ".remove_page", function () {
-  var clickedBtnID = this.id
-  console.log('#' + clickedBtnID)
+  console.log('#' + this.id)
+  var id = $(this).attr('value')
   ws.send(JSON.stringify({
     event: 'remove_page',
-    page_id: this.value
+    page_id: id
   }));
-  $("#page_" + this.value).remove();
+  $("#page_" + id).remove();
 });
 
 $(document).on("click", ".page_url", function () {
@@ -139,6 +141,3 @@ setInterval(function () {
 }, refresh_interval);
 
 ws.onopen = () => ws.send(JSON.stringify({ event: 'ws.onopen' }));
-
-    // var url = document.location.origin + "/static/Spinner-2.4s-207px.gif"
-    // $(`<img src=${url}>`).appendTo($("#new_"+item.id));
