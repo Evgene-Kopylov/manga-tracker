@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import os
 from typing import List
 
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv, find_dotenv
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -32,6 +34,8 @@ class MangaParser:
         """
         self.local = local
         self.browser = browser
+        selenium_host = os.environ.get("SELENIUM_HOST", 'localhost')
+        self.command_executor = f'http://{selenium_host}:4444'
 
     def _driver(self):
         if self.local and self.browser == 0:
@@ -44,13 +48,13 @@ class MangaParser:
         if self.browser == 1:
             chrome_options = webdriver.ChromeOptions()
             return webdriver.Remote(
-                command_executor='http://localhost:4444',
+                command_executor=self.command_executor,
                 options=chrome_options
             )
         else:
             firefox_options = webdriver.FirefoxOptions()
             return webdriver.Remote(
-                command_executor='http://localhost:4444',
+                command_executor=self.command_executor,
                 options=firefox_options
             )
 
@@ -63,6 +67,9 @@ class MangaParser:
                 page = session.query(Page).filter_by(id=_page.id).first()
                 print(f"{page.name=}")
                 soup = self._page_soup(page.url, driver)
+                if not soup:
+                    print('no soup')
+                    break
                 block = self._page_block(soup, page)
                 if not block:
                     print('no block')
@@ -80,15 +87,18 @@ class MangaParser:
         driver.quit()
 
     @staticmethod
-    def _page_soup(url: str, driver) -> BeautifulSoup:
+    def _page_soup(url: str, driver) -> BeautifulSoup | None:
         """
 
         :param url: page url
-        :return: page html
+        :return: page html  selenium.common.exceptions.WebDriverException
         """
-        driver.get(url)
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
-        return soup
+        try:
+            driver.get(url)
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            return soup
+        except WebDriverException:
+            return None
 
     @staticmethod
     def _page_block(soup: BeautifulSoup, page: Page) -> BeautifulSoup:
