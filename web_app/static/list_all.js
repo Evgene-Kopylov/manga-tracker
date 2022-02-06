@@ -34,7 +34,7 @@ const table = {
       <td id="total_${item.id}" class="total"><span></span></td>
       <td id="new_${item.id}" class="new" value="${item.id}"><span></span></td>
       <td id="remove_${item.id}" class="remove_page" value="${item.id}">&#10005;</td>`
-    }).prependTo("#user_list");
+    }).prependTo("#watchlist");
   },
 
   setName: function(item) {
