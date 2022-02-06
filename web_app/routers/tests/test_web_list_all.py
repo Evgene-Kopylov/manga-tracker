@@ -1,15 +1,14 @@
-from datetime import datetime
+import os
 import re
 import time
 import unittest
-
-from selenium import webdriver
-import os
+from datetime import datetime
 
 from dotenv import find_dotenv, load_dotenv
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
 
 from db.models import Page
 from db.session import SessionLocal
@@ -49,9 +48,9 @@ class TestWebListAll(unittest.TestCase):
         self.driver.get(self.url)
         print(id)
         time.sleep(0.6)
-        delete_btn_id = "remove_page_" + id
-        delete_btn = self.driver.find_element(By.ID, delete_btn_id)
-        print(delete_btn_id)
+        delete_trigger = "remove_" + id
+        delete_btn = self.driver.find_element(By.ID, delete_trigger)
+        print(delete_trigger)
         delete_btn.click()
         time.sleep(0.3)
         page = session.query(Page).filter_by(id=id).first()
@@ -65,7 +64,8 @@ class TestWebListAll(unittest.TestCase):
         self.driver.get(self.url)
         time.sleep(0.6)
         safe_click = self.driver.find_element(By.ID, 'safe_click')
-        edit_page_id = 'edit_page_' + id
+        assert safe_click
+        edit_page_id = 'edit_' + id
         edit_btn = self.driver.find_element(By.ID, edit_page_id)
         edit_btn.click()
         name_field_id = 'name_field_' + id
@@ -90,6 +90,7 @@ class TestWebListAll(unittest.TestCase):
         time.sleep(0.1)
 
         page = session.query(Page).filter_by(id=page_id).first()
+        assert page
         page.chapters = '1, 2, 3, 4, 5'
         page.new = 2
         session.commit()
@@ -97,7 +98,8 @@ class TestWebListAll(unittest.TestCase):
         time.sleep(0.6)
         new_id = 'new_' + page_id
         new_el = self.driver.find_element(By.ID, new_id)
-        print(new_el.text)
+        assert new_el.text
+
         new_num = new_el.text[2:-1]
         print(new_num)
 

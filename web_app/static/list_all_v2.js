@@ -48,7 +48,7 @@ const table = {
   setNew: function(item) {
     // var url = document.location.origin + "/static/Spinner-2.4s-207px.gif"
     // $(`<img src=${url}>`).appendTo($("#new_"+item.id));
-    $(`#new_${item.id} > span`).text(item.new)
+    $(`#new_${item.id} > span`).text(`(+${item.new})`)
   }
 };
 
