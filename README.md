@@ -7,9 +7,13 @@
 
 ## Запуск локально
 
-Помести файл .env в папку проекта, рядом с docker-compose.yml.
+1. Помести файл .env в папку проекта, рядом с docker-compose.yml.
+2. Запустить проект используя docker-compose.yml
+3. При первом запуске, провести миграцию Alembic
 
-Запустить проект используя docker-compose.yml
+Для добавления элемента в список отслеживания использовать [расширение браузера][tool]
+
+[tool]: https://github.com/Evgene-Kopylov/manga-garden-tool
 
 ## Переменные окружения
 
@@ -39,9 +43,16 @@
   - `chrome`
 
 ## Миграции
+
 Alembic
 
+```commandline
+cd web_app
+alembic upgrade head
+```
+
 ## Тестирование
+
 ```commandline
 cd web_app
 pytest
