@@ -1,13 +1,19 @@
+import os
+
+from dotenv import find_dotenv, load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from core.settings import db_url
+load_dotenv(find_dotenv())
+
+db_url = "postgresql://{}:{}@{}:{}/{}".format(
+    os.environ.get("POSTGRES_USER", 'postgres'),
+    os.environ.get("POSTGRES_PASSWORD", 'postgres'),
+    os.environ.get("POSTGRES_SERVER", 'localhost'),
+    os.environ.get("POSTGRES_PORT", '5432'),
+    os.environ.get("POSTGRES_DB", 'demo_db'),
+)
 
 engine = create_engine(db_url)
-
-# SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite"
-# engine = create_engine(
-#     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-# )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

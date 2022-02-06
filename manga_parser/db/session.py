@@ -7,11 +7,11 @@ from sqlalchemy.orm import sessionmaker
 load_dotenv(find_dotenv())
 
 db_url = "postgresql://{}:{}@{}:{}/{}".format(
-    os.environ.get("POSTGRES_USER"),
-    os.environ.get("POSTGRES_PASSWORD"),
+    os.environ.get("POSTGRES_USER", 'postgres'),
+    os.environ.get("POSTGRES_PASSWORD", 'postgres'),
     os.environ.get("POSTGRES_SERVER", 'localhost'),
     os.environ.get("POSTGRES_PORT", '5432'),
-    os.environ.get("POSTGRES_DB"),
+    os.environ.get("POSTGRES_DB", 'demo_db'),
 )
 
 engine = create_engine(db_url)
