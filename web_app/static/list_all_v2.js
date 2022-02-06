@@ -55,7 +55,6 @@ ws.onmessage = function (event) {
   for (var i in collection) {
     var item = collection[i];
     table.row(item);
-    console.log(item.last_update)
   } 
 };
 
@@ -64,45 +63,41 @@ window.addEventListener('focus', function() {
 });
 
 $(document).on("click", ".edit_name", function () {
-  let page_id = this.value
-
-  var link = $('#link_page_' + this.value)
-  let old_name = link.prop("innerText")
-
+  let id = $(this).attr('value')
+  var link = $('#name_' + id + ' > a')
+  let old_name = $(`#name_${id} > a`).text()
   var input = $("<input>", {
-    id: 'name_field_' + this.value,
+    id: 'name_field_' + id,
     class: 'name_field',
     size: 50,
     value: old_name,
   })
 
   link.replaceWith(input);
-  input.focus()
+  input.trigger('focus')
 
   function editName() {
     var new_name = input.prop("value")
     if (old_name !== new_name) {
       ws.send(JSON.stringify({
         event: 'edit_name',
-        page_id: page_id,
+        page_id: id,
         value: new_name,
     }));
     link.text(new_name);
   }};
 
-  input.keypress(function (event) {
-    if (event.keyCode === 13) {
+  input.on("keydown", function (event) {
+    if (event.key === 'Enter') {
       editName()
       input.replaceWith(link);
     }
   });
 
-  input.blur(function () {
+  input.on("blur", function () {
     editName()
     input.replaceWith(link);
   });
-
-  input.blur(input.replaceWith.link)
 });
 
 $(document).on("click", ".remove_page", function () {
@@ -123,7 +118,6 @@ $(document).on("click", ".page_url", function () {
     page_id: $(this).attr('value')
   }));
   window.location.replace($(this).attr('href'));
-
 });
 
 $(document).on("click", ".new", function () {
