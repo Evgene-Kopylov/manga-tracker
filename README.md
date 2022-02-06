@@ -1,25 +1,27 @@
 ## manga tracker
 Сервис для отслеживания обновлений манги, 
-с возможностью добавлять новые сценарии 
-парсинга с помощью расширения хром.
+с возможностью добавлять новые сценарии парсинга с помощью расширения хром.
 
-Представляет собой автоматизированный парсер, 
-спроектированный для отслеживания изменений в указанном 
-блоке страницы.
+Представляет собой автоматизированный парсер, спроектированный для отслеживания изменений в указанном блоке страницы.
 Приложение хром используется для создания сценария парсинга.
 
 ## Запуск локально
 
+Помести файл .env в папку проекта, рядом с docker-compose.yml.
+
+Запустить проект используя docker-compose.yml
+
 ## Переменные окружения
 
-- `PYTHONPATH` = `web_app`
-- `POSTGRES_DB` = `manga_tracker_db`
+Все переменные имуют значенмя по-умолчанию. Можно оставить .env пустым.
+
+- `POSTGRES_DB`
 - `POSTGRES_USER`
 - `POSTGRES_PASSWORD`
-- `SECRET_KEY`
-- `POSTGRES_SERVER`= localhost
-- `POSTGRES_PORT`=5432
-- `POSTGRES_TEST_PORT`=5444
+
+- `POSTGRES_SERVER`
+- `POSTGRES_PORT`
+
 - `LOCAL_DEV` - set `1` if runs locally, ignore if not.
 - `AMQP_URL`= amqp://guest:guest@localhost:5672/
 - `DISCORD_WEBHOOK_URL` - discord server for debug logs
@@ -27,14 +29,14 @@
 ## Структура проекта
 
 Контейнеры:
-- `manga_tracker` - FastApi based web app 
-- `instant_parser` - Контейнер для быстрой обработки запроса на парсинг по запросу через RabbitMQ
-- `manga_parser` - Котейнер для парсинга по расписанию
+
+- `web_app` - FastApi based web app
+- `manga_parser` - Контейнер для быстрой обработки запроса на парсинг по запросу через RabbitMQ
 - `db` - postgres
 - `rabbitmq` - обмен сообщений внутри сервиса
 - `selenium-hub` - selenium docker
-    - `firefox`
-    - `chrome`
+  - `firefox`
+  - `chrome`
 
 ## Миграции
 Alembic
