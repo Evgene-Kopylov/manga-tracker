@@ -17,7 +17,8 @@ def get_pages() -> List:
             'total': page.total,
             'last_check': str(page.last_check),
             'last_update': str(page.last_update),
-            'new': page.new
+            'new': page.new,
+            'processing': page.processing
         } for page in pages
     ]
     collection.sort(key=lambda x: x['last_update'])

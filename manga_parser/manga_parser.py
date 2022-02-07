@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from datetime import datetime
 from typing import List
 
 from bs4 import BeautifulSoup
@@ -65,6 +66,8 @@ class MangaParser:
         for _page in _pages:
             try:
                 page = session.query(Page).filter_by(id=_page.id).first()
+                page.parsing_start = datetime.now()
+                session.commit()
                 print(f"{page.name=}")
                 soup = self._page_soup(page.url, driver)
                 if not soup:
@@ -79,6 +82,7 @@ class MangaParser:
 
                 chapters = [ch.text for ch in block.select(page.element)]
                 page.add_chapters(chapters)
+                page.parsing_stop = datetime.now()
                 session.commit()
                 print(chapters)
             except AttributeError as e:
