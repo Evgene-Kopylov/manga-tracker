@@ -20,7 +20,7 @@ const table = {
   },
 
   updateNew: function(item) {
-    if ($(`#new_${item.id} > span`).text() !== item.new) {
+    if ($(`#new_${item.id} > span`).text() !== `(+${item.new})`) {
       table.setNew(item)
     }
   },
