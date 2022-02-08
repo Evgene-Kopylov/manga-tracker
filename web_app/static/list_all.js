@@ -20,9 +20,15 @@ const table = {
   },
 
   updateNew: function(item) {
-    if ($(`#new_${item.id} > span`).text() !== item.new) {
+    if ($(`#new_${item.id} > span`).text() !== `(+${item.new})`) {
       table.setNew(item)
-    }
+    };
+    if (item.pending) {
+      $(`#new_${item.id}`).addClass('pending')
+    } else {
+      $(`#new_${item.id}`).removeClass('pending')
+    };
+
   },
 
   spawnRow: function(item) {
@@ -42,14 +48,16 @@ const table = {
   },
 
   setTotal: function(item) {
-    $(`#total_${item.id} > span`).text(item.total)
+    if ($(`#total_${item.id} > span`).text() !== item.total.toString()) {
+      $(`#total_${item.id} > span`).text(item.total)
+    }    
   },
 
   setNew: function(item) {
-    // var url = document.location.origin + "/static/Spinner-2.4s-207px.gif"
-    // $(`<img src=${url}>`).appendTo($("#new_"+item.id));
-    $(`#new_${item.id} > span`).text(`(+${item.new})`)
-  }
+    if (item.new !== item.total) {
+      $(`#new_${item.id} > span`).text(`(+${item.new})`)
+    };
+  },
 };
 
 ws.onmessage = function (event) {
@@ -64,7 +72,7 @@ window.addEventListener('focus', function() {
   ws.send(JSON.stringify({ event: 'focus' }))
 });
 
-$(document).on("click", ".edit_name", function () {
+$("#watchlist").on("click", ".edit_name", function () {
   let id = $(this).attr('value')
   var link = $('#name_' + id + ' > a')
   let old_name = $(`#name_${id} > a`).text()
@@ -102,7 +110,7 @@ $(document).on("click", ".edit_name", function () {
   });
 });
 
-$(document).on("click", ".remove_page", function () {
+$("#watchlist").on("click", ".remove_page", function () {
   console.log('#' + this.id)
   var id = $(this).attr('value')
   ws.send(JSON.stringify({
@@ -112,7 +120,7 @@ $(document).on("click", ".remove_page", function () {
   $("#page_" + id).remove();
 });
 
-$(document).on("click", ".page_url", function () {
+$("#watchlist").on("click", ".page_url", function () {
   console.log('#' + this.id)
   console.log('href= ' + $(this).attr('href'))
   ws.send(JSON.stringify({
@@ -122,7 +130,7 @@ $(document).on("click", ".page_url", function () {
   window.location.replace($(this).attr('href'));
 });
 
-$(document).on("click", ".new", function () {
+$("#watchlist").on("click", ".new", function () {
   console.log('new for page ' + $(this).attr('value'))
   ws.send(JSON.stringify({
     event: 'click_new',
@@ -133,7 +141,6 @@ $(document).on("click", ".new", function () {
 const refresh_interval = 2000
 setInterval(function () {
   if (!document.hidden && ws.readyState) {
-    console.log('refresh_interval ' + refresh_interval + ' msec')
     ws.send(JSON.stringify({ event: 'window.active' }))
   } else {
     console.log("document.hidden")

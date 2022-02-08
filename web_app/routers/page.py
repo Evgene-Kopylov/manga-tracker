@@ -10,7 +10,6 @@ from db.session import SessionLocal
 from routers.page_utils import get_name
 from routers.tests.rmq_pablish import Publisher
 
-
 session = SessionLocal()
 router = APIRouter()
 
@@ -54,6 +53,7 @@ def add_page(url: str, element: str, block: str
     ).first()
     if not duble:
         session.add(page)
+        page.pending = True
         session.commit()
         publisher.publish('new_page', str(page.id))
     else:

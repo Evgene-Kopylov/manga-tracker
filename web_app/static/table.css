@@ -1,22 +1,65 @@
-button.edit_name {
-    border: none;
-    background: none;
-}
-
-button.remove_page {
-    border: none;
-    background: none;
-}
-
 td.page_name{
     width: 50ch;
 }
 
-input.name_field {
-    border: none;
+td.edit_name {
+    opacity: 0.1;
+}
+td.edit_name:hover {
+    opacity: 0.4;
 }
 
-td.chapters_total,
+.page_name > a {
+    color: rgb(72, 81, 117);
+    text-decoration: none;
+
+}
+
+td.remove_page {
+    opacity: 0.2;
+}
+
+td.remove_page:hover {
+    /* color: rgb(219, 113, 113);
+    font-weight: bold; */
+    opacity: 1;
+}
+
+input.name_field {
+    outline: none;
+    border: 1px solid #999;
+    border-radius: 0;
+    margin: -3px;
+}
+
+td.total,
 td.new {
     min-width: 3ch;
+}
+
+.pending {
+    background: rgb(195, 205, 50);
+}
+
+div#content {
+    cursor: default;
+}
+
+div.watchlist {
+    font-size: 18px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1ch;
+    -webkit-box-shadow: 4px 5px 25px 0px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 4px 5px 25px 0px rgba(34, 60, 80, 0.2);
+    box-shadow: 4px 5px 25px 0px rgba(34, 60, 80, 0.2);
+}
+
+tr:hover {
+    background-color: rgba(221, 210, 57, 0.1);
+}
+
+body {
+    background-color: #F9F9FD;
 }
