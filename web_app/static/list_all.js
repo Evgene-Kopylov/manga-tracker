@@ -22,7 +22,13 @@ const table = {
   updateNew: function(item) {
     if ($(`#new_${item.id} > span`).text() !== `(+${item.new})`) {
       table.setNew(item)
-    }
+    };
+    if (item.pending) {
+      $(`#new_${item.id}`).addClass('pending')
+    } else {
+      $(`#new_${item.id}`).removeClass('pending')
+    };
+
   },
 
   spawnRow: function(item) {
@@ -46,10 +52,10 @@ const table = {
   },
 
   setNew: function(item) {
-    // var url = document.location.origin + "/static/Spinner-2.4s-207px.gif"
-    // $(`<img src=${url}>`).appendTo($("#new_"+item.id));
-    $(`#new_${item.id} > span`).text(`(+${item.new})`)
-  }
+    if (item.new !== item.total) {
+      $(`#new_${item.id} > span`).text(`(+${item.new})`)
+    };
+  },
 };
 
 ws.onmessage = function (event) {
@@ -133,7 +139,7 @@ $(document).on("click", ".new", function () {
 const refresh_interval = 2000
 setInterval(function () {
   if (!document.hidden && ws.readyState) {
-    console.log('refresh_interval ' + refresh_interval + ' msec')
+    // console.log('refresh_interval ' + refresh_interval + ' msec')
     ws.send(JSON.stringify({ event: 'window.active' }))
   } else {
     console.log("document.hidden")

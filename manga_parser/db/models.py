@@ -49,9 +49,13 @@ class Page(Base):
         self.parsing_attempt += '\n' + str(dif)
 
     @property
-    def processing(self) -> bool:
+    def pending(self) -> bool:
         pa = self.parsing_attempt.split('\n') if self.parsing_attempt else []
         return len(pa) == 1
+
+    @pending.setter
+    def pending(self, value: datetime):
+        self.parsing_attempt = str(value)
 
     @property
     def element(self):

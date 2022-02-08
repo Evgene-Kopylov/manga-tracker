@@ -1,5 +1,5 @@
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from db.models import Page
 
@@ -19,9 +19,20 @@ def test_add_chapters():
 def test_parsing_attempt():
     page = Page()
     page.parsing_start = datetime.now()
-    assert page.processing
+    assert page.pending
     time.sleep(0.05)
     page.parsing_stop = datetime.now()
     print((datetime.now() - page.parsing_start).microseconds)
     assert 50_000 < (datetime.now() - page.parsing_start).microseconds
     assert 100_000 > (datetime.now() - page.parsing_start).microseconds
+
+
+def test_pending():
+    page = Page()
+    assert page.pending is False
+    page.parsing_start = datetime.now()
+    assert page.pending is True
+    page.parsing_stop = datetime.now()
+    assert page.pending is False
+    page.parsing_start = datetime.now() - timedelta(seconds=11)
+    assert page.pending is False

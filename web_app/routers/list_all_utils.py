@@ -18,7 +18,7 @@ def get_pages() -> List:
             'last_check': str(page.last_check),
             'last_update': str(page.last_update),
             'new': page.new,
-            'processing': page.processing
+            'pending': page.pending
         } for page in pages
     ]
     collection.sort(key=lambda x: x['last_update'])
