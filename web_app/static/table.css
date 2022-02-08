@@ -3,7 +3,26 @@ td.page_name{
 }
 
 td.edit_name {
+    opacity: 0.1;
+}
+td.edit_name:hover {
+    opacity: 0.4;
+}
+
+.page_name > a {
+    color: rgb(72, 81, 117);
+    text-decoration: none;
+
+}
+
+td.remove_page {
     opacity: 0.2;
+}
+
+td.remove_page:hover {
+    /* color: rgb(219, 113, 113);
+    font-weight: bold; */
+    opacity: 1;
 }
 
 input.name_field {
@@ -24,9 +43,11 @@ td.new {
 
 div#content {
     background-color: #F9F9FD;
+    cursor: default;
 }
 
 div.watchlist {
+    font-size: 18px;
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
@@ -34,4 +55,8 @@ div.watchlist {
     -webkit-box-shadow: 4px 5px 25px 0px rgba(34, 60, 80, 0.2);
     -moz-box-shadow: 4px 5px 25px 0px rgba(34, 60, 80, 0.2);
     box-shadow: 4px 5px 25px 0px rgba(34, 60, 80, 0.2);
+}
+
+tr:hover {
+    background-color: rgba(221, 210, 57, 0.1);
 }
