@@ -51,11 +51,17 @@ class Page(Base):
     @property
     def pending(self) -> bool:
         pa = self.parsing_attempt.split('\n') if self.parsing_attempt else []
-        return len(pa) == 1
+        if len(pa) != 1:
+            return False
+        dif = (datetime.now() - datetime.strptime(pa[0], '%Y-%m-%d %H:%M:%S.%f')).seconds
+        if dif > 10:
+            return False
+        return True
 
     @pending.setter
-    def pending(self, value: datetime):
-        self.parsing_attempt = str(value)
+    def pending(self, val: bool):
+        if val:
+            self.parsing_start = datetime.now()
 
     @property
     def element(self):
