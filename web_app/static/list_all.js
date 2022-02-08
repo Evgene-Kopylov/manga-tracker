@@ -48,7 +48,9 @@ const table = {
   },
 
   setTotal: function(item) {
-    $(`#total_${item.id} > span`).text(item.total)
+    if ($(`#total_${item.id} > span`).text() !== item.total.toString()) {
+      $(`#total_${item.id} > span`).text(item.total)
+    }    
   },
 
   setNew: function(item) {
