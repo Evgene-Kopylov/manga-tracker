@@ -42,7 +42,6 @@ td.new {
 }
 
 div#content {
-    background-color: #F9F9FD;
     cursor: default;
 }
 
@@ -59,4 +58,8 @@ div.watchlist {
 
 tr:hover {
     background-color: rgba(221, 210, 57, 0.1);
+}
+
+body {
+    background-color: #F9F9FD;
 }
