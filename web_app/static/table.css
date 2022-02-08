@@ -1,26 +1,37 @@
-button.edit_name {
-    border: none;
-    background: none;
-}
-
-button.remove_page {
-    border: none;
-    background: none;
-}
-
 td.page_name{
     width: 50ch;
 }
 
-input.name_field {
-    border: none;
+td.edit_name {
+    opacity: 0.2;
 }
 
-td.chapters_total,
+input.name_field {
+    outline: none;
+    border: 1px solid #999;
+    border-radius: 0;
+    margin: -3px;
+}
+
+td.total,
 td.new {
     min-width: 3ch;
 }
 
 .pending {
     background: rgb(195, 205, 50);
+}
+
+div#content {
+    background-color: #F9F9FD;
+}
+
+div.watchlist {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1ch;
+    -webkit-box-shadow: 4px 5px 25px 0px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 4px 5px 25px 0px rgba(34, 60, 80, 0.2);
+    box-shadow: 4px 5px 25px 0px rgba(34, 60, 80, 0.2);
 }

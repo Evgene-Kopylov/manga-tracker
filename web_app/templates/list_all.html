@@ -1,12 +1,14 @@
 {% extends "base_template.html" %}
 {% block title %}List all{% endblock %}
 {% block content %}
-    <h1 id="safe_click">List all</h1>
-    <hr>
-    <hr>
+<h1 id="safe_click">List all</h1>
+<hr>
+<hr>
+<div class="watchlist">
     <table>
         <tbody id="watchlist"></tbody>
     </table>
-    <hr>
-    <script src="{{ url_for('static', path='/list_all.js') }}"></script>
+</div>
+<hr>
+<script src="{{ url_for('static', path='/list_all.js') }}"></script>
 {% endblock %}
