@@ -2,7 +2,7 @@ import unittest
 
 from db.models import Page
 from db.session import SessionLocal
-from manga_parser.manga_parser import MangaParser
+from manga_parser import MangaParser
 
 session = SessionLocal()
 
@@ -11,7 +11,7 @@ class TestMangaParser(unittest.TestCase):
     def setUp(self) -> None:
         self.mp = MangaParser()
 
-    @unittest.skip
+    # @unittest.skip
     def test_driver(self):
         driver = self.mp._driver()
         driver.get('https://www.google.com/')
@@ -23,8 +23,8 @@ class TestMangaParser(unittest.TestCase):
         url = 'https://murimlogin.com/'
         driver = self.mp._driver()
         soup = self.mp._page_soup(url, driver)
-        with open('murim_login.html', 'w', encoding='utf-8') as file:
-            file.write(soup.prettify())
+        # with open('murim_login.html', 'w', encoding='utf-8') as file:
+        #     file.write(soup.prettify())
         driver.quit()
 
     @unittest.skip
