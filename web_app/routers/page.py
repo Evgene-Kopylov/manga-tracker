@@ -3,6 +3,7 @@ from typing import Dict, Any
 
 from dotenv import load_dotenv, find_dotenv
 from fastapi import APIRouter, Request
+from starlette.responses import RedirectResponse
 
 from db.models import Page
 from db.schemas.page import AddPageSchema
@@ -40,16 +41,14 @@ def user_registration(request: Request, page: AddPageSchema
 
 @router.get('/add_page')
 def add_page(url: str, element: str, block: str
-             ) -> Dict[str, Any]:
+             ) -> RedirectResponse:
     page = Page()
     page.url = url
     page.element = element
     page.block = block
     page.name = get_name(url)
     duble = session.query(Page).filter_by(
-        url=page.url,
-        _element=page.element,
-        _block=page.block
+        url=page.url
     ).first()
     if not duble:
         session.add(page)
@@ -59,13 +58,4 @@ def add_page(url: str, element: str, block: str
     else:
         print('page duplicate')
 
-    return {
-        'id': page.id or duble.id,
-        'url': url[:100] or url,
-        'name': page.name,
-        'element': ('... ' + element[-50:]) or element,
-        'block': ('... ' + block[-50:]) or block,
-        'chapters': page.chapters,
-        'total': page.total,
-        'new': page.new
-    }
+    return RedirectResponse('/')
