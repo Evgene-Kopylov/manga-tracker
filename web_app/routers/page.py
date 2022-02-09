@@ -42,15 +42,15 @@ def user_registration(request: Request, page: AddPageSchema
 @router.get('/add_page')
 def add_page(url: str, element: str, block: str
              ) -> RedirectResponse:
-    page = Page()
-    page.url = url
-    page.element = element
-    page.block = block
-    page.name = get_name(url)
-    duble = session.query(Page).filter_by(
-        url=page.url
+    page = session.query(Page).filter_by(
+        url=url
     ).first()
-    if not duble:
+    if not page:
+        page = Page()
+        page.url = url
+        page.element = element
+        page.block = block
+        page.name = get_name(url)
         session.add(page)
         page.pending = True
         session.commit()
@@ -58,4 +58,6 @@ def add_page(url: str, element: str, block: str
     else:
         print('page duplicate')
 
-    return RedirectResponse('/')
+    return RedirectResponse(
+        url='/' + f"?new_id={page.id}"
+    )
