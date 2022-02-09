@@ -23,40 +23,26 @@ class MangaParser:
     mostly chapter names from lists.
     """
 
-    def __init__(self, browser: int = 0, local: bool = False) -> None:
+    def __init__(self, local: bool = False) -> None:
         """
-
-        @param browser: optional, default 0
-                        0 - firefox
-                        1 - chrome
         @param local: optional, default False
                       True - use local Selenium
                       False - use Selenium Docker
         """
         self.local = local
-        self.browser = browser
         selenium_host = os.environ.get("SELENIUM_HOST", 'localhost')
         self.command_executor = f'http://{selenium_host}:4444'
 
     def _driver(self):
-        if self.local and self.browser == 0:
-            s = Service(ChromeDriverManager().install())
-            return webdriver.Firefox(s)
-        elif self.local and self.browser == 1:
+        if self.local:
             s = Service(ChromeDriverManager().install())
             return webdriver.Chrome(service=s)
-        
-        if self.browser == 1:
+        else:
             chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument('headless')
             return webdriver.Remote(
                 command_executor=self.command_executor,
                 options=chrome_options
-            )
-        else:
-            firefox_options = webdriver.FirefoxOptions()
-            return webdriver.Remote(
-                command_executor=self.command_executor,
-                options=firefox_options
             )
 
     def start(self, pages: List[Page] | Page) -> None:
@@ -85,6 +71,7 @@ class MangaParser:
             except AttributeError as e:
                 print(e)
             finally:
+                driver.delete_all_cookies()
                 driver.quit()
 
     @staticmethod
@@ -111,8 +98,8 @@ class MangaParser:
 
 if __name__ == "__main__":
     local_session = SessionLocal()
-    process = MangaParser(browser=1, local=False)
+    process = MangaParser(local=True)
     pgs = local_session.query(Page).all()
     print(len(pgs))
-    process.start(pgs)
+    process.start(pgs[:3])
     # process.start(pgs[0])
