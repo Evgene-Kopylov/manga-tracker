@@ -23,9 +23,6 @@
 - `POSTGRES_USER`
 - `POSTGRES_PASSWORD`
 
-- `POSTGRES_SERVER`
-- `POSTGRES_PORT`
-
 - `LOCAL_DEV` - set `1` if runs locally, ignore if not.
 - `AMQP_URL`= amqp://guest:guest@localhost:5672/
 - `DISCORD_WEBHOOK_URL` - discord server for debug logs

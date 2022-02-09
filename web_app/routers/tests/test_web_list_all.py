@@ -24,7 +24,7 @@ class TestWebListAll(unittest.TestCase):
     def setUp(self) -> None:
         chrome_options = webdriver.ChromeOptions()
         if os.environ.get("LOCAL_DEV"):
-            self.url = 'http://127.0.0.1:8000/'
+            self.home_url = 'http://127.0.0.1:8000/'
             self.url_add_page = 'http://127.0.0.1:8000/add_page/?url=url&element=element&block=block'
             s = Service(ChromeDriverManager().install())
             self.driver = webdriver.Chrome(service=s)
@@ -33,7 +33,7 @@ class TestWebListAll(unittest.TestCase):
                 command_executor='http://localhost:4444',
                 options=chrome_options
             )
-            self.url = ''  # ipublic addres
+            self.home_url = ''  # ipublic addres
 
     def tearDown(self) -> None:
         self.driver.quit()
@@ -46,7 +46,7 @@ class TestWebListAll(unittest.TestCase):
         id = page_id
         page = session.query(Page).filter_by(id=id).first()
         assert page
-        self.driver.get(self.url)
+        self.driver.get(self.home_url)
         print(id)
         time.sleep(0.6)
         delete_trigger = "remove_" + id
@@ -64,7 +64,7 @@ class TestWebListAll(unittest.TestCase):
         page_id = query['new_id'][0]
 
         id = page_id
-        self.driver.get(self.url)
+        self.driver.get(self.home_url)
         time.sleep(0.6)
         safe_click = self.driver.find_element(By.ID, 'safe_click')
         assert safe_click
@@ -98,7 +98,7 @@ class TestWebListAll(unittest.TestCase):
         page.chapters = '1, 2, 3, 4, 5'
         page.new = 2
         session.commit()
-        self.driver.get(self.url)
+        self.driver.get(self.home_url)
         time.sleep(0.6)
         new_id = 'new_' + page_id
         new_el = self.driver.find_element(By.ID, new_id)
