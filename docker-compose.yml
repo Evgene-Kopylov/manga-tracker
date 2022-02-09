@@ -27,17 +27,6 @@ services:
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
       - SE_NODE_SESSION_TIMEOUT=15
 
-  firefox:
-    image: selenium/node-firefox:4.1.1-20220121
-    shm_size: 2gb
-    depends_on:
-      - selenium-hub
-    environment:
-      - SE_EVENT_BUS_HOST=selenium-hub
-      - SE_EVENT_BUS_PUBLISH_PORT=4442
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-      - SE_NODE_SESSION_TIMEOUT=15
-
   selenium-hub:
     image: selenium/hub:4.1.1-20220121
     container_name: selenium-hub
@@ -71,6 +60,8 @@ services:
       - POSTGRES_PORT=5432
       - AMQP_URL=amqp://guest:guest@rabbitmq:5672/
       - SELENIUM_HOST=selenium-hub
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - db
       - rabbitmq

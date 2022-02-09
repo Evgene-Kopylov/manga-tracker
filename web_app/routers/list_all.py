@@ -34,7 +34,7 @@ manager = ChatConnectionManager()
 
 
 @router.get("/")
-async def get(request: Request):
+async def list_all(request: Request):
     return templates.TemplateResponse(
         "list_all.html", {"request": request})
 

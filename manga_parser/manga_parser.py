@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from typing import List
 
+import docker
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv, find_dotenv
 from selenium import webdriver
@@ -23,47 +24,33 @@ class MangaParser:
     mostly chapter names from lists.
     """
 
-    def __init__(self, browser: int = 0, local: bool = False) -> None:
+    def __init__(self, local: bool = False) -> None:
         """
-
-        @param browser: optional, default 0
-                        0 - firefox
-                        1 - chrome
         @param local: optional, default False
                       True - use local Selenium
                       False - use Selenium Docker
         """
         self.local = local
-        self.browser = browser
         selenium_host = os.environ.get("SELENIUM_HOST", 'localhost')
         self.command_executor = f'http://{selenium_host}:4444'
 
     def _driver(self):
-        if self.local and self.browser == 0:
-            s = Service(ChromeDriverManager().install())
-            return webdriver.Firefox(s)
-        elif self.local and self.browser == 1:
+        if self.local:
             s = Service(ChromeDriverManager().install())
             return webdriver.Chrome(service=s)
-        
-        if self.browser == 1:
+        else:
             chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument('headless')
             return webdriver.Remote(
                 command_executor=self.command_executor,
                 options=chrome_options
             )
-        else:
-            firefox_options = webdriver.FirefoxOptions()
-            return webdriver.Remote(
-                command_executor=self.command_executor,
-                options=firefox_options
-            )
 
     def start(self, pages: List[Page] | Page) -> None:
         _pages = [pages] if type(pages) is not list else pages
-        driver = self._driver()
-        session = SessionLocal()
         for _page in _pages:
+            driver = self._driver()
+            session = SessionLocal()
             try:
                 page = session.query(Page).filter_by(id=_page.id).first()
                 page.parsing_start = datetime.now()
@@ -72,14 +59,11 @@ class MangaParser:
                 soup = self._page_soup(page.url, driver)
                 if not soup:
                     print('no soup')
-                    break
                 block = self._page_block(soup, page)
                 if not block:
                     print('no block')
-                    break
                 page.block_html = block.prettify() if block else ''
                 session.commit()
-
                 chapters = [ch.text for ch in block.select(page.element)]
                 page.add_chapters(chapters)
                 page.parsing_stop = datetime.now()
@@ -87,8 +71,23 @@ class MangaParser:
                 print(chapters)
             except AttributeError as e:
                 print(e)
+            finally:
+                self.restart_container('chrome')
 
-        driver.quit()
+    @staticmethod
+    def restart_container(name: str):
+        """
+        Restarts all containers with {name} in name
+
+        @param name: part of container name
+        """
+
+        client = docker.from_env()
+        # print(client.containers.list())
+        for c in client.containers.list():
+            # print(c.name)
+            if name in c.name:
+                c.restart()
 
     @staticmethod
     def _page_soup(url: str, driver) -> BeautifulSoup | None:
@@ -114,7 +113,9 @@ class MangaParser:
 
 if __name__ == "__main__":
     local_session = SessionLocal()
-    process = MangaParser(browser=1, local=False)
+    # process = MangaParser(local=True)
+    process = MangaParser()
     pgs = local_session.query(Page).all()
-    # process.start(pages)
-    process.start(pgs[0])
+    print(len(pgs))
+    process.start(pgs[:3])
+    # process.start(pgs[0])
