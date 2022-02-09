@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from typing import List
 
+import docker
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv, find_dotenv
 from selenium import webdriver
@@ -71,8 +72,22 @@ class MangaParser:
             except AttributeError as e:
                 print(e)
             finally:
-                driver.delete_all_cookies()
-                driver.quit()
+                self.restart_container('chrome')
+
+    @staticmethod
+    def restart_container(name: str):
+        """
+        Restarts all containers with {name} in name
+
+        @param name: part of container name
+        """
+
+        client = docker.from_env()
+        # print(client.containers.list())
+        for c in client.containers.list():
+            # print(c.name)
+            if name in c.name:
+                c.restart()
 
     @staticmethod
     def _page_soup(url: str, driver) -> BeautifulSoup | None:
@@ -98,7 +113,8 @@ class MangaParser:
 
 if __name__ == "__main__":
     local_session = SessionLocal()
-    process = MangaParser(local=True)
+    # process = MangaParser(local=True)
+    process = MangaParser()
     pgs = local_session.query(Page).all()
     print(len(pgs))
     process.start(pgs[:3])
