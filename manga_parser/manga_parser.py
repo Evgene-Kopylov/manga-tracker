@@ -61,9 +61,9 @@ class MangaParser:
 
     def start(self, pages: List[Page] | Page) -> None:
         _pages = [pages] if type(pages) is not list else pages
-        driver = self._driver()
-        session = SessionLocal()
         for _page in _pages:
+            driver = self._driver()
+            session = SessionLocal()
             try:
                 page = session.query(Page).filter_by(id=_page.id).first()
                 page.parsing_start = datetime.now()
@@ -72,14 +72,11 @@ class MangaParser:
                 soup = self._page_soup(page.url, driver)
                 if not soup:
                     print('no soup')
-                    break
                 block = self._page_block(soup, page)
                 if not block:
                     print('no block')
-                    break
                 page.block_html = block.prettify() if block else ''
                 session.commit()
-
                 chapters = [ch.text for ch in block.select(page.element)]
                 page.add_chapters(chapters)
                 page.parsing_stop = datetime.now()
@@ -87,8 +84,8 @@ class MangaParser:
                 print(chapters)
             except AttributeError as e:
                 print(e)
-
-        driver.quit()
+            finally:
+                driver.quit()
 
     @staticmethod
     def _page_soup(url: str, driver) -> BeautifulSoup | None:
@@ -116,5 +113,6 @@ if __name__ == "__main__":
     local_session = SessionLocal()
     process = MangaParser(browser=1, local=False)
     pgs = local_session.query(Page).all()
-    # process.start(pages)
-    process.start(pgs[0])
+    print(len(pgs))
+    process.start(pgs)
+    # process.start(pgs[0])
