@@ -132,5 +132,5 @@ class InstaMangaParser:
 
 
 if __name__ == "__main__":
-    mpar = InstaMangaParser()
-    mpar.start()
+    insta = InstaMangaParser()
+    insta.start()
