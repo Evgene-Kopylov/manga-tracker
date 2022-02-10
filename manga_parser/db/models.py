@@ -94,7 +94,7 @@ class Page(Base):
         """add new unique chapters"""
         n = self.total
         self.chapters += [c for c in chapters if c not in self.chapters]
-        self.new += self.total - n
+        self.new += (self.total - n) if n else 0
 
     @property
     def total(self):

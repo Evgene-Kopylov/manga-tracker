@@ -54,7 +54,7 @@ const table = {
   },
 
   setNew: function(item) {
-    if (item.new !== item.total) {
+    if (item.new && (item.new !== item.total)) {
       $(`#new_${item.id} > span`).text(`(+${item.new})`)
     };
   },
