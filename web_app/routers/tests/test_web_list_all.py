@@ -23,9 +23,9 @@ session = SessionLocal()
 class TestWebListAll(unittest.TestCase):
     def setUp(self) -> None:
         chrome_options = webdriver.ChromeOptions()
-        if os.environ.get("LOCAL_DEV"):
-            self.home_url = 'http://127.0.0.1:8000/'
-            self.url_add_page = 'http://127.0.0.1:8000/add_page/?url=url&element=element&block=block'
+        self.home_url = os.environ.get("MANGA_TRACKER_URL", 'http://127.0.0.1:8000')
+        self.url_add_page = self.home_url + '/add_page/?url=url&element=element&block=block'
+        if os.environ.get("LOCAL_DEV") == '1':
             s = Service(ChromeDriverManager().install())
             self.driver = webdriver.Chrome(service=s)
         else:
@@ -33,7 +33,6 @@ class TestWebListAll(unittest.TestCase):
                 command_executor='http://localhost:4444',
                 options=chrome_options
             )
-            self.home_url = ''  # ipublic addres
 
     def tearDown(self) -> None:
         self.driver.quit()

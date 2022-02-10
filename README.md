@@ -23,7 +23,8 @@
 - `POSTGRES_USER`
 - `POSTGRES_PASSWORD`
 
-- `LOCAL_DEV` - set `1` if runs locally, ignore if not.
+- `MANGA_TRACKER_URL` - base url, default `http://localhost:8000`
+- `LOCAL_DEV` - set `1` if runs locally, default `0`.
 - `AMQP_URL`= amqp://guest:guest@localhost:5672/
 - `DISCORD_WEBHOOK_URL` - discord server for debug logs
 
