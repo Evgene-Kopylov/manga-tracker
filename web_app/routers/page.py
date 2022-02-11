@@ -61,6 +61,9 @@ def event_action(ws_msg: MutableMapping[str, Any]) -> None:
         return
     msg = json.loads(ws_msg.get('text'))
     if msg.get('event') == 'ws.onopen':
+        all_pages = session.query(Page).all()
+        ids = [c.id for c in all_pages]
+        publisher.publish('check_it', str(ids))
         return
     _id = msg.get('page_id')
     if not _id:
@@ -108,7 +111,7 @@ def add_page(url: str, element: str, block: str
         session.add(page)
         page.pending = True
         session.commit()
-        publisher.publish('new_page', str(page.id))
+        publisher.publish('check_it', str([page.id]))
     else:
         print('page duplicate')
 

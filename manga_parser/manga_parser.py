@@ -48,6 +48,9 @@ class MangaParser:
     def start(self, pages: List[Page] | Page) -> None:
         _pages = [pages] if type(pages) is not list else pages
         for _page in _pages:
+            if abs((datetime.now() - _page.parsing_start).seconds) < (20 * 60):
+                print(f"{_page.name=} checked recently")
+                continue
             driver = self._driver()
             session = SessionLocal()
             try:
@@ -72,23 +75,6 @@ class MangaParser:
                 print(e)
             finally:
                 driver.quit()
-
-    #             self.restart_container('chrome')
-    #
-    # @staticmethod
-    # def restart_container(name: str):
-    #     """
-    #     Restarts all containers with {name} in name
-    #
-    #     @param name: part of container name
-    #     """
-    #
-    #     client = docker.from_env()
-    #     # print(client.containers.list())
-    #     for c in client.containers.list():
-    #         # print(c.name)
-    #         if name in c.name:
-    #             c.restart()
 
     @staticmethod
     def _page_soup(url: str, driver) -> BeautifulSoup | None:
