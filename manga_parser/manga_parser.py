@@ -52,7 +52,7 @@ class MangaParser:
     def start(self, pages: List[Page] | Page) -> None:
         _pages = [pages] if type(pages) is not list else pages
         for _page in _pages:
-            if abs((datetime.now() - _page.parsing_start).seconds) < (20 * 60):
+            if _page.parsing_attempt and abs((datetime.now() - _page.parsing_start).seconds) < (20 * 60):
                 print(f"{_page.name=} checked recently")
                 continue
             driver = self._driver()

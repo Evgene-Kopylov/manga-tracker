@@ -108,7 +108,7 @@ def add_page(url: str, element: str, block: str
     page.block = block
     page.name = get_name(url)
     session.add(page)
-    page.pending = True
+    page.parsing_attempt = None
     session.commit()
     publisher.publish('check_it', str([page.id]))
 
