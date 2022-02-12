@@ -71,10 +71,13 @@ def event_action(ws_msg: MutableMapping[str, Any]) -> None:
     print(f"{msg=}")
     _id = int(msg.get('page_id'))
     page = session.query(Page).filter_by(id=_id).first()
-    if msg.get('event') == 'remove_page':
+    event = msg.get('event')
+    if event == 'remove_page':
         session.delete(page)
-    elif msg.get('event') == 'edit_name':
+    elif event == 'edit_name':
         page.name = msg.get('value')
+    elif event == 'click_new':
+        page.new = 0
     else:
         return
     session.commit()
