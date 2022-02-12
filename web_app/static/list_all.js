@@ -35,7 +35,7 @@ const table = {
     $("<tr>", {
       id: 'page_' + item.id,
       html: `
-      <td id="name_${item.id}" class="page_name"><a href="${item.url}"></a></td>
+      <td id="name_${item.id}" class="page_name" value="${item.id}"><a href="#" _href="${item.url}"></a></td>
       <td id="edit_${item.id}" class="edit_name" value="${item.id}">&#128394;</td>
       <td id="total_${item.id}" class="total"><span></span></td>
       <td id="new_${item.id}" class="new" value="${item.id}"><span></span></td>
@@ -122,14 +122,12 @@ $("#watchlist").on("click", ".remove_page", function () {
   $("#page_" + id).remove();
 });
 
-$("#watchlist").on("click", ".page_url", function () {
-  console.log('#' + this.id)
-  console.log('href= ' + $(this).attr('href'))
+$("#watchlist").on("click", ".page_name", function () {
   ws.send(JSON.stringify({
-    event: 'page_url_click',
+    event: 'page_name_click',
     page_id: $(this).attr('value')
   }));
-  window.location.replace($(this).attr('href'));
+  window.location.replace($(this.children).attr('_href'));
 });
 
 $("#watchlist").on("click", ".new", function () {

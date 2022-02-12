@@ -78,6 +78,8 @@ def event_action(ws_msg: MutableMapping[str, Any]) -> None:
         page.name = msg.get('value')
     elif event == 'click_new':
         page.new = 0
+    elif event == 'page_name_click':
+        page.new = 0
     else:
         return
     session.commit()
