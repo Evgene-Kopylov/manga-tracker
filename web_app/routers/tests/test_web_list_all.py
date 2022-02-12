@@ -101,17 +101,15 @@ class TestWebListAll(unittest.TestCase):
         time.sleep(0.6)
         new_id = 'new_' + page_id
         new_el = self.driver.find_element(By.ID, new_id)
-        assert new_el.text
+        assert new_el.text == '(+2)'
 
         new_num = new_el.text[2:-1]
         print(new_num)
 
-        page.new = 3
-        session.commit()
         new_el.click()
         time.sleep(0.5)
         new_el = self.driver.find_element(By.ID, new_id)
-        assert new_el.text == '(+3)'
+        assert new_el.text == ''
 
         session.delete(page)
         session.commit()
