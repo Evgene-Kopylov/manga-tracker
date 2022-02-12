@@ -7,8 +7,12 @@ from typing import List
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv, find_dotenv
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, TimeoutException
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
 from db.models import Page
@@ -50,7 +54,7 @@ class MangaParser:
         for _page in _pages:
             if abs((datetime.now() - _page.parsing_start).seconds) < (20 * 60):
                 print(f"{_page.name=} checked recently")
-                continue
+                # continue
             driver = self._driver()
             session = SessionLocal()
             try:
@@ -58,7 +62,7 @@ class MangaParser:
                 page.parsing_start = datetime.now()
                 session.commit()
                 print(f"{page.name=}")
-                soup = self._page_soup(page.url, driver)
+                soup = self._page_soup(page, driver)
                 if not soup:
                     print('no soup')
                 block = self._page_block(soup, page)
@@ -77,14 +81,19 @@ class MangaParser:
                 driver.quit()
 
     @staticmethod
-    def _page_soup(url: str, driver) -> BeautifulSoup | None:
+    def _page_soup(page: Page, driver: WebDriver) -> BeautifulSoup | None:
         """
 
-        :param url: page url
+        :param page:
         :return: page html  selenium.common.exceptions.WebDriverException
         """
         try:
-            driver.get(url)
+            driver.get(page.url)
+            try:
+                WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located(
+                    (By.CSS_SELECTOR, page.element)))
+            except TimeoutException:
+                pass
             soup = BeautifulSoup(driver.page_source, 'html.parser')
             return soup
         except WebDriverException:
@@ -100,9 +109,10 @@ class MangaParser:
 
 if __name__ == "__main__":
     local_session = SessionLocal()
-    # process = MangaParser(local=True)
-    process = MangaParser()
+    process = MangaParser(local=True)
+    # process = MangaParser()
     pgs = local_session.query(Page).all()
-    print(len(pgs))
-    process.start(pgs[:3])
+    # pgs = local_session.query(Page).filter_by(name='Volcanic Age').first()
+    # print(len(pgs))
+    process.start(pgs)
     # process.start(pgs[0])
