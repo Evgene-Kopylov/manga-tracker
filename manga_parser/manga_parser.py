@@ -54,7 +54,7 @@ class MangaParser:
         for _page in _pages:
             if abs((datetime.now() - _page.parsing_start).seconds) < (20 * 60):
                 print(f"{_page.name=} checked recently")
-                # continue
+                continue
             driver = self._driver()
             session = SessionLocal()
             try:
