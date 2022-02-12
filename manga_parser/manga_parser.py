@@ -37,8 +37,8 @@ class MangaParser:
         selenium_host = os.environ.get("SELENIUM_HOST", 'localhost')
         self.command_executor = f'http://{selenium_host}:4444'
 
-    def _driver(self):
-        if self.local:
+    def _driver(self, local: bool = False):
+        if local:
             s = Service(ChromeDriverManager().install())
             return webdriver.Chrome(service=s)
         else:
@@ -55,7 +55,7 @@ class MangaParser:
             if _page.parsing_attempt and abs((datetime.now() - _page.parsing_start).seconds) < (20 * 60):
                 print(f"{_page.name=} checked recently")
                 continue
-            driver = self._driver()
+            driver = self._driver(self.local)
             session = SessionLocal()
             try:
                 page = session.query(Page).filter_by(id=_page.id).first()
@@ -111,8 +111,10 @@ if __name__ == "__main__":
     local_session = SessionLocal()
     process = MangaParser(local=True)
     # process = MangaParser()
-    pgs = local_session.query(Page).all()
-    # pgs = local_session.query(Page).filter_by(name='Volcanic Age').first()
+    # pgs = local_session.query(Page).all()
+    pgs = local_session.query(Page).filter_by(name='Test_Page').first()
+    pgs.parsing_attempt = None
+    local_session.commit()
     # print(len(pgs))
     process.start(pgs)
     # process.start(pgs[0])

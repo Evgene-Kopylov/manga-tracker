@@ -5,13 +5,14 @@ from starlette.staticfiles import StaticFiles
 
 from db.session import SessionLocal
 from routers.page import router as page_router
+from routers.test_page import router as test_page_router
 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-
 app.include_router(page_router)
+app.include_router(test_page_router)
 
 session = SessionLocal()
 
