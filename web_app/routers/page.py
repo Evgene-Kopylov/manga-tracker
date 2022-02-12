@@ -102,18 +102,15 @@ def add_page(url: str, element: str, block: str
     page = session.query(Page).filter_by(
         url=url
     ).first()
-    if not page:
-        page = Page()
-        page.url = url
-        page.element = element
-        page.block = block
-        page.name = get_name(url)
-        session.add(page)
-        page.pending = True
-        session.commit()
-        publisher.publish('check_it', str([page.id]))
-    else:
-        print('page duplicate')
+    page = page or Page()
+    page.url = url
+    page.element = element
+    page.block = block
+    page.name = get_name(url)
+    session.add(page)
+    page.pending = True
+    session.commit()
+    publisher.publish('check_it', str([page.id]))
 
     return RedirectResponse(
         url='/' + f"?new_id={page.id}"
