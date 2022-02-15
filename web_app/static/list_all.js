@@ -90,14 +90,6 @@ ws.onmessage = function (event) {
     table.row(item);
     table.rowOrder(item);
   };
-  // for (var j in collection) {
-  //   var item = collection[j];
-  //   var el = $("#page_" + item.id)
-  //   console.log(el.attr('value'), el.prev().attr('value'))
-  //   if (el.attr('value') < el.prev().attr('value')) {
-  //     el.insertBefore(el.prev());
-  //   }
-  // };
 };
 
 window.addEventListener('focus', function() {
