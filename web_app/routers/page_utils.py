@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 from db.models import Page
@@ -8,6 +9,8 @@ session = SessionLocal()
 
 def get_pages() -> List:
     pages = session.query(Page).all()
+    pages.sort(key=lambda x: (datetime.now() - x.last_update).seconds)
+    print([(datetime.now() - x.last_update).seconds for x in pages])
     collection = [
         {
             'id': page.id,
@@ -21,7 +24,6 @@ def get_pages() -> List:
             'pending': page.pending
         } for page in pages
     ]
-    collection.sort(key=lambda x: x['last_update'])
     return collection
 
 

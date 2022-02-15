@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime
 from typing import List, MutableMapping, Any
 
 from dotenv import load_dotenv, find_dotenv
@@ -62,6 +63,7 @@ def event_action(ws_msg: MutableMapping[str, Any]) -> None:
     msg = json.loads(ws_msg.get('text'))
     if msg.get('event') == 'ws.onopen':
         all_pages = session.query(Page).all()
+        all_pages.sort(key=lambda x: (datetime.now() - x.last_update).seconds)
         ids = [c.id for c in all_pages]
         publisher.publish('check_it', str(ids))
         return
