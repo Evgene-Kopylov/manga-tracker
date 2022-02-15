@@ -36,7 +36,7 @@ const table = {
       id: 'page_' + item.id,
       value: item.last_update,
       html: `
-      <td id="name_${item.id}" class="page_name" value="${item.id}">${item.last_update}   <a href="#" _href="${item.url}"></a></td>
+      <td id="name_${item.id}" class="page_name" value="${item.id}"><a href="#" _href="${item.url}"></a></td>
       <td id="edit_${item.id}" class="edit_name" value="${item.id}">&#128394;</td>
       <td id="total_${item.id}" class="total"><span></span></td>
       <td id="new_${item.id}" class="new" value="${item.id}"><span></span></td>
