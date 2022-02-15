@@ -104,7 +104,7 @@ class Page(Base):
         n = self.total
         self.chapters += [c for c in chapters if c not in self.chapters]
         self.new += (self.total - n) if n else 0
-        self.last_update = self.last_update if n else str(datetime.now())
+        self.last_update = str(datetime.now()) if n else self.last_update
 
     @property
     def total(self):

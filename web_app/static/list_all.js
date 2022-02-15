@@ -34,8 +34,9 @@ const table = {
   spawnRow: function(item) {
     $("<tr>", {
       id: 'page_' + item.id,
+      value: item.last_update,
       html: `
-      <td id="name_${item.id}" class="page_name" value="${item.id}"><a href="#" _href="${item.url}"></a></td>
+      <td id="name_${item.id}" class="page_name" value="${item.id}">${item.last_update}   <a href="#" _href="${item.url}"></a></td>
       <td id="edit_${item.id}" class="edit_name" value="${item.id}">&#128394;</td>
       <td id="total_${item.id}" class="total"><span></span></td>
       <td id="new_${item.id}" class="new" value="${item.id}"><span></span></td>
@@ -60,6 +61,26 @@ const table = {
       $(`#new_${item.id} > span`).empty()
     }
   },
+
+  rowOrder: function(item) {
+    var el = $("#page_" + item.id)
+    if (parseInt(el.attr('value')) !== item.last_update) {
+      table.updateTrValue(item);
+    };
+    // console.log(el.attr('value'), el.prev().attr('value'))
+    if (parseInt(el.attr('value')) < parseInt(el.prev().attr('value'))) {
+      el.insertBefore(el.prev());
+      table.updateTrValue(item);
+    };
+    if (parseInt(el.attr('value')) < parseInt(el.prev().attr('value'))) {
+      table.rowOrder(item)
+    }
+  },
+
+  updateTrValue: function(item) {
+    $("#page_" + item.id).attr('value', item.last_update)
+  }
+
 };
 
 ws.onmessage = function (event) {
@@ -67,7 +88,16 @@ ws.onmessage = function (event) {
   for (var i in collection) {
     var item = collection[i];
     table.row(item);
-  } 
+    table.rowOrder(item);
+  };
+  // for (var j in collection) {
+  //   var item = collection[j];
+  //   var el = $("#page_" + item.id)
+  //   console.log(el.attr('value'), el.prev().attr('value'))
+  //   if (el.attr('value') < el.prev().attr('value')) {
+  //     el.insertBefore(el.prev());
+  //   }
+  // };
 };
 
 window.addEventListener('focus', function() {

@@ -113,3 +113,20 @@ class TestWebListAll(unittest.TestCase):
 
         session.delete(page)
         session.commit()
+
+# @pytest.skip
+# def test_row_order():
+#     page = session.query(Page).filter_by(name='Readfic').first()
+#     print(page.last_update)
+#     page.last_update = datetime.now()
+#     session.commit()
+
+
+# # @pytest.skip
+# def test_row_order_2():
+#     pages = session.query(Page).all()
+#     pages.sort(key=lambda x: (datetime.now() - x.last_update).seconds, reverse=True)
+#     print(pages[0].last_update)
+#     pages[0].add_chapters(['test'])
+#     # page.add_chapters(['test'])
+#     session.commit()

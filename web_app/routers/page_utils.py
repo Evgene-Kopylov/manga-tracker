@@ -9,7 +9,7 @@ session = SessionLocal()
 
 def get_pages() -> List:
     pages = session.query(Page).all()
-    pages.sort(key=lambda x: (datetime.now() - x.last_update).seconds)
+    pages.sort(key=lambda x: (datetime.now() - x.last_update).seconds, reverse=True)
     print([(datetime.now() - x.last_update).seconds for x in pages])
     collection = [
         {
@@ -19,7 +19,8 @@ def get_pages() -> List:
             'last_chapters': page.chapters[:5],
             'total': page.total,
             'last_check': str(page.last_check),
-            'last_update': str(page.last_update),
+            # 'last_update': str(page.last_update),
+            'last_update': (datetime.now() - page.last_update).seconds,
             'new': page.new,
             'pending': page.pending
         } for page in pages
