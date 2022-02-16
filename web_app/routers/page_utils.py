@@ -10,7 +10,7 @@ session = SessionLocal()
 def get_pages() -> List:
     pages = session.query(Page).all()
     pages.sort(key=lambda x: (datetime.now() - x.last_update).seconds, reverse=True)
-    print([(datetime.now() - x.last_update).seconds for x in pages])
+    # print([(datetime.now() - x.last_update).seconds for x in pages])
     collection = [
         {
             'id': page.id,
