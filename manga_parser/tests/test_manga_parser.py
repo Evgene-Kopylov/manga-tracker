@@ -88,7 +88,7 @@ class TestMangaParser(unittest.TestCase):
                 c.restart()
 
     @unittest.skip
-    def test_eniron(self):
+    def test_environ(self):
         docker_host = os.environ.get('DOCKER_HOST')
         print(docker_host)
 
