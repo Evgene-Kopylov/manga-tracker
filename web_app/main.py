@@ -18,6 +18,9 @@ session = SessionLocal()
 
 
 class PageScenario(BaseModel):
+    """
+    Модель данных для создания страницы
+    """
     url: str
     element: str
     block: str
