@@ -12,8 +12,16 @@
 #
 import os
 import sys
+from pathlib import Path
 
 sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, Path(__file__).parent.parent.parent.parent.__str__() + r'\manga_parser')
+
+if __name__ == "__main__":
+    print(os.path.abspath('.'))
+    print(os.path.abspath('..'))
+    print(Path(__file__).parent.parent.parent.parent.__str__() + r'\manga_parser')
+    print(os.path.abspath(os.path.dirname('manga_parser')))
 
 # -- Project information -----------------------------------------------------
 
@@ -27,8 +35,8 @@ author = 'death'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    # 'sphinx.ext.napoleon'
+    # 'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

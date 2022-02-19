@@ -7,7 +7,10 @@ Welcome to Manga-Tracker's documentation!
 =========================================
 
 .. toctree::
-   code_web_app
+    :maxdepth: 2
+
+    code_web_app
+    code_manga_parser
 
 
 
