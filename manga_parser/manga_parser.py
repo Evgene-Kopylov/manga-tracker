@@ -4,12 +4,15 @@ import os
 from datetime import datetime
 from typing import List
 
-import docker
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv, find_dotenv
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, TimeoutException
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
 from db.models import Page
@@ -34,8 +37,8 @@ class MangaParser:
         selenium_host = os.environ.get("SELENIUM_HOST", 'localhost')
         self.command_executor = f'http://{selenium_host}:4444'
 
-    def _driver(self):
-        if self.local:
+    def _driver(self, local: bool = False):
+        if local:
             s = Service(ChromeDriverManager().install())
             return webdriver.Chrome(service=s)
         else:
@@ -49,14 +52,17 @@ class MangaParser:
     def start(self, pages: List[Page] | Page) -> None:
         _pages = [pages] if type(pages) is not list else pages
         for _page in _pages:
-            driver = self._driver()
+            if _page.parsing_attempt and abs((datetime.now() - _page.parsing_start).seconds) < (20 * 60):
+                print(f"{_page.name=} checked recently")
+                continue
+            driver = self._driver(self.local)
             session = SessionLocal()
             try:
                 page = session.query(Page).filter_by(id=_page.id).first()
                 page.parsing_start = datetime.now()
                 session.commit()
                 print(f"{page.name=}")
-                soup = self._page_soup(page.url, driver)
+                soup = self._page_soup(page, driver)
                 if not soup:
                     print('no soup')
                 block = self._page_block(soup, page)
@@ -72,32 +78,22 @@ class MangaParser:
             except AttributeError as e:
                 print(e)
             finally:
-                self.restart_container('chrome')
+                driver.quit()
 
     @staticmethod
-    def restart_container(name: str):
-        """
-        Restarts all containers with {name} in name
-
-        @param name: part of container name
+    def _page_soup(page: Page, driver: WebDriver) -> BeautifulSoup | None:
         """
 
-        client = docker.from_env()
-        # print(client.containers.list())
-        for c in client.containers.list():
-            # print(c.name)
-            if name in c.name:
-                c.restart()
-
-    @staticmethod
-    def _page_soup(url: str, driver) -> BeautifulSoup | None:
-        """
-
-        :param url: page url
+        :param page:
         :return: page html  selenium.common.exceptions.WebDriverException
         """
         try:
-            driver.get(url)
+            driver.get(page.url)
+            try:
+                WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located(
+                    (By.CSS_SELECTOR, page.element)))
+            except TimeoutException:
+                pass
             soup = BeautifulSoup(driver.page_source, 'html.parser')
             return soup
         except WebDriverException:
@@ -113,9 +109,12 @@ class MangaParser:
 
 if __name__ == "__main__":
     local_session = SessionLocal()
-    # process = MangaParser(local=True)
-    process = MangaParser()
-    pgs = local_session.query(Page).all()
-    print(len(pgs))
-    process.start(pgs[:3])
+    process = MangaParser(local=True)
+    # process = MangaParser()
+    # pgs = local_session.query(Page).all()
+    pgs = local_session.query(Page).filter_by(name='Test_Page').first()
+    pgs.parsing_attempt = None
+    local_session.commit()
+    # print(len(pgs))
+    process.start(pgs)
     # process.start(pgs[0])

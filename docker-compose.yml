@@ -63,3 +63,4 @@ services:
     depends_on:
       - db
       - rabbitmq
+      - selenium-hub

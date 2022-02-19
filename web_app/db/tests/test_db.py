@@ -47,3 +47,10 @@ class TestPostgresDBSession(unittest.TestCase):
         page = Page()
         page.element = 'div.......single-page > div..cols'
         assert page.element and '..' not in page.element
+
+    # @unittest.skip
+    # def test_(self):
+    #     pages = self.session.query(Page).all()
+    #     for p in pages[:3]:
+    #         p._chapters = ''
+    #     self.session.commit()

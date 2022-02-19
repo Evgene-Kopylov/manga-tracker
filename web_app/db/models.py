@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from string import ascii_letters, digits
 from typing import List
 
 from sqlalchemy import Column, DateTime, Integer, String, TEXT
@@ -9,9 +10,17 @@ from db.base import Base
 
 
 def selector_fix(selector):
+    def valid_css(css: str):
+        symbols = ascii_letters + digits + '<> #.-_'
+        for sim in css:
+            if sim not in symbols:
+                return False
+        return True
+
     while '..' in selector:
         selector = selector.replace("..", ".")
-    return selector
+
+    return ' > '.join([x for x in selector.split(' > ') if valid_css(x)])
 
 
 class Page(Base):
@@ -94,7 +103,8 @@ class Page(Base):
         """add new unique chapters"""
         n = self.total
         self.chapters += [c for c in chapters if c not in self.chapters]
-        self.new += self.total - n
+        self.new += (self.total - n) if n else 0
+        self.last_update = str(datetime.now()) if n else self.last_update
 
     @property
     def total(self):

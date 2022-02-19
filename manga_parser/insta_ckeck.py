@@ -1,3 +1,4 @@
+import json
 import os
 from typing import Any
 
@@ -31,7 +32,7 @@ class InstaMangaParser:
         self.debug = True if os.getenv('DEBUG', '0') in ('1', 'true',
                                                          'yes') else False
         self.amqp_url = os.environ.get('AMQP_URL', 'amqp://guest:guest@localhost:5672/')
-        self.routing_key = os.environ.get('ROUTING_KEY', 'new_page')
+        self.routing_key = 'check_it'
 
     def start(self) -> None:
         """
@@ -101,36 +102,19 @@ class InstaMangaParser:
         @param body: message body
         """
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        print(body)
+        print(f"{body=}")
         routing_key = method.routing_key
         print(f"{routing_key=}")
         msg = body.decode('utf-8')
-        comment = self.msg_is_valid(msg)
-        if comment != 'OK':
-            self.log(comment=comment, msg=msg)
-            return
-
-        page = session.query(Page).filter_by(id=int(msg)).first()
-        parser.start(page)
-
-        comment = f'{page.id=} {page.name=}' if page else f'{page=}'
-        self.log(comment=comment, important=True)
+        msg = json.loads(msg)
+        print(f"{msg=}")
+        all_pages = session.query(Page).all()
+        pages = [c for c in all_pages if c.id in msg]
+        parser.start(pages)
         return
 
-    @staticmethod
-    def msg_is_valid(msg: str) -> str:
-        """
-        Checks if message is valid
-
-        @param msg: message to check
-        @return: 'OK' if valid
-        """
-        if msg.isdigit():
-            return 'OK'
-        else:
-            return 'not digit'
 
 
 if __name__ == "__main__":
-    mpar = InstaMangaParser()
-    mpar.start()
+    insta = InstaMangaParser()
+    insta.start()

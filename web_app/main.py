@@ -4,25 +4,15 @@ from pydantic import BaseModel
 from starlette.staticfiles import StaticFiles
 
 from db.session import SessionLocal
-from routers.list_all import router as list_all_router
 from routers.page import router as page_router
+from routers.test_page import router as test_page_router
 
 app = FastAPI()
 
-# from fastapi.middleware.cors import CORSMiddleware
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-
 app.include_router(page_router)
-app.include_router(list_all_router)
+app.include_router(test_page_router)
 
 session = SessionLocal()
 

@@ -34,8 +34,9 @@ const table = {
   spawnRow: function(item) {
     $("<tr>", {
       id: 'page_' + item.id,
+      value: item.last_update,
       html: `
-      <td id="name_${item.id}" class="page_name"><a href="${item.url}"></a></td>
+      <td id="name_${item.id}" class="page_name" value="${item.id}"><a href="#" _href="${item.url}"></a></td>
       <td id="edit_${item.id}" class="edit_name" value="${item.id}">&#128394;</td>
       <td id="total_${item.id}" class="total"><span></span></td>
       <td id="new_${item.id}" class="new" value="${item.id}"><span></span></td>
@@ -54,10 +55,32 @@ const table = {
   },
 
   setNew: function(item) {
-    if (item.new !== item.total) {
+    if (item.new && (item.new !== item.total)) {
       $(`#new_${item.id} > span`).text(`(+${item.new})`)
-    };
+    } else {
+      $(`#new_${item.id} > span`).empty()
+    }
   },
+
+  rowOrder: function(item) {
+    var el = $("#page_" + item.id)
+    if (parseInt(el.attr('value')) !== item.last_update) {
+      table.updateTrValue(item);
+    };
+    // console.log(el.attr('value'), el.prev().attr('value'))
+    if (parseInt(el.attr('value')) < parseInt(el.prev().attr('value'))) {
+      el.insertBefore(el.prev());
+      table.updateTrValue(item);
+    };
+    if (parseInt(el.attr('value')) < parseInt(el.prev().attr('value'))) {
+      table.rowOrder(item)
+    }
+  },
+
+  updateTrValue: function(item) {
+    $("#page_" + item.id).attr('value', item.last_update)
+  }
+
 };
 
 ws.onmessage = function (event) {
@@ -65,7 +88,8 @@ ws.onmessage = function (event) {
   for (var i in collection) {
     var item = collection[i];
     table.row(item);
-  } 
+    table.rowOrder(item);
+  };
 };
 
 window.addEventListener('focus', function() {
@@ -120,14 +144,12 @@ $("#watchlist").on("click", ".remove_page", function () {
   $("#page_" + id).remove();
 });
 
-$("#watchlist").on("click", ".page_url", function () {
-  console.log('#' + this.id)
-  console.log('href= ' + $(this).attr('href'))
+$("#watchlist").on("click", ".page_name", function () {
   ws.send(JSON.stringify({
-    event: 'page_url_click',
+    event: 'page_name_click',
     page_id: $(this).attr('value')
   }));
-  window.location.replace($(this).attr('href'));
+  window.location.replace($(this.children).attr('_href'));
 });
 
 $("#watchlist").on("click", ".new", function () {

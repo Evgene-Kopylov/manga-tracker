@@ -23,9 +23,9 @@ session = SessionLocal()
 class TestWebListAll(unittest.TestCase):
     def setUp(self) -> None:
         chrome_options = webdriver.ChromeOptions()
-        if os.environ.get("LOCAL_DEV"):
-            self.home_url = 'http://127.0.0.1:8000/'
-            self.url_add_page = 'http://127.0.0.1:8000/add_page/?url=url&element=element&block=block'
+        self.home_url = os.environ.get("MANGA_TRACKER_URL", 'http://127.0.0.1:8000')
+        self.url_add_page = self.home_url + '/add_page/?url=url&element=element&block=block'
+        if os.environ.get("LOCAL_DEV") == '1':
             s = Service(ChromeDriverManager().install())
             self.driver = webdriver.Chrome(service=s)
         else:
@@ -33,7 +33,6 @@ class TestWebListAll(unittest.TestCase):
                 command_executor='http://localhost:4444',
                 options=chrome_options
             )
-            self.home_url = ''  # ipublic addres
 
     def tearDown(self) -> None:
         self.driver.quit()
@@ -102,17 +101,32 @@ class TestWebListAll(unittest.TestCase):
         time.sleep(0.6)
         new_id = 'new_' + page_id
         new_el = self.driver.find_element(By.ID, new_id)
-        assert new_el.text
+        assert new_el.text == '(+2)'
 
         new_num = new_el.text[2:-1]
         print(new_num)
 
-        page.new = 3
-        session.commit()
         new_el.click()
         time.sleep(0.5)
         new_el = self.driver.find_element(By.ID, new_id)
-        assert new_el.text == '(+3)'
+        assert new_el.text == ''
 
         session.delete(page)
         session.commit()
+
+# @pytest.skip
+# def test_row_order():
+#     page = session.query(Page).filter_by(name='Readfic').first()
+#     print(page.last_update)
+#     page.last_update = datetime.now()
+#     session.commit()
+
+
+# # @pytest.skip
+# def test_row_order_2():
+#     pages = session.query(Page).all()
+#     pages.sort(key=lambda x: (datetime.now() - x.last_update).seconds, reverse=True)
+#     print(pages[0].last_update)
+#     pages[0].add_chapters(['test'])
+#     # page.add_chapters(['test'])
+#     session.commit()
